@@ -1,0 +1,221 @@
+## Hero Section Options
+
+---
+
+**Option 1**
+
+- **Headline:** *Elevate Your DevOps Impact with Self-Service Automation*
+- **Subheadline:** *Empower your developers, streamline adoption, and enhance your DevOps efficiency with Planton
+  Cloud.*
+- **Call-to-Action Buttons:** "Get Started Free" and "Book Demo"
+- **Visual Idea:** An illustration of DevOps engineers seamlessly delivering automation to developers through Planton
+  Cloud, symbolizing enhanced collaboration and efficiency.
+
+---
+
+**Option 2**
+
+- **Headline:** *Unleash Your Automation, Skip the Documentation*
+- **Subheadline:** *Accelerate developer adoption of your automation without the overhead of documentation and
+  training.*
+- **Call-to-Action Buttons:** "Try Planton Cloud" and "Schedule a Demo"
+- **Visual Idea:** A DevOps engineer deploying automation modules into the cloud, while developers effortlessly access
+  and utilize them, highlighting ease of adoption.
+
+---
+
+**Option 3**
+
+- **Headline:** *Amplify Your DevOps with Planton Cloud's Self-Service Platform*
+- **Subheadline:** *Provide self-service capabilities to your developers and focus on what you love—building
+  automation.*
+- **Call-to-Action Buttons:** "Start Now" and "Request a Demo"
+- **Visual Idea:** A happy DevOps engineer creating automation modules, with developers accessing these modules through
+  an intuitive interface, representing high adoption and productivity.
+
+---
+
+## Page Sections
+
+---
+
+### Empower Developers with Self-Service Automation
+
+**Description:**
+
+Planton Cloud enables you to provide developers with self-service access to the automation you create. Eliminate the
+need for extensive documentation and training sessions. With our platform, your automation becomes easily discoverable
+and usable, increasing adoption rates and freeing you to focus on building more innovative solutions.
+
+**Visualization Notes:**
+
+- An illustration of developers browsing a user-friendly catalog of automation modules curated by DevOps engineers.
+- Visual elements showing seamless interaction between DevOps and developers, symbolizing collaboration and efficiency.
+
+---
+
+### Centralized Pulumi Module Registry
+
+**Description:**
+
+Leverage the Pulumi Module Registry to create, customize, and share reusable Infrastructure as Code modules within your
+organization. Register your automation on Planton Cloud's web interface, making it easily accessible for your team.
+Standardize deployments and simplify sharing to enhance consistency across projects.
+
+**Visualization Notes:**
+
+- A screenshot or mock-up of the Pulumi Module Registry showcasing a list of modules with descriptions and usage stats.
+- Icons representing collaboration and sharing, such as linked nodes or connected devices.
+
+---
+
+### Accelerate Adoption without Documentation Overhead
+
+**Description:**
+
+Say goodbye to time-consuming documentation and training. Planton Cloud's intuitive platform and AI-powered assistant,
+Plantora, help developers effortlessly discover and utilize your automation. Increase adoption rates while reducing the
+burden of creating extensive support materials.
+
+**Visualization Notes:**
+
+- A comparison image showing a stack of heavy documentation versus an elegant, simple interface.
+- Developers quickly accessing automation tools with minimal steps, highlighting ease of use.
+
+---
+
+### Enhance Developer Experience with Plantora
+
+**Description:**
+
+Plantora, your AI DevOps co-pilot, guides developers through using your automation via conversational AI. It assists in
+discovering modules, understanding configurations, and executing deployments, making the developer experience seamless
+and reducing the support load on your team.
+
+**Visualization Notes:**
+
+- A chat interface where a developer interacts with Plantora to deploy resources, showing step-by-step assistance.
+- Visual cues of AI assistance, like speech bubbles or a friendly AI avatar guiding the process.
+
+---
+
+### Customize and Extend with Open APIs and SDKs
+
+**Description:**
+
+Planton Cloud offers open APIs and SDKs, empowering you to create custom tools, plugins, and interfaces tailored to your
+organization's needs. Extend our platform's functionality to provide specialized capabilities and integrate seamlessly
+with your existing workflows.
+
+**Visualization Notes:**
+
+- Diagram showing custom tools integrating with Planton Cloud through APIs.
+- Icons representing coding, APIs, and extension modules connecting together.
+
+---
+
+### Simplify Complex Infrastructure Management
+
+**Description:**
+
+Manage sophisticated, distributed architectures effortlessly. With Planton Cloud, deploy and maintain microservices,
+databases, and third-party services without additional DevOps overhead. Streamline your infrastructure management and
+dedicate more time to innovation.
+
+**Visualization Notes:**
+
+- Visualization of complex infrastructure components unified under a single, easy-to-use dashboard.
+- Elements representing various services (e.g., Kubernetes, databases) interconnected through Planton Cloud.
+
+---
+
+### Boost Team Efficiency and Collaboration
+
+**Description:**
+
+Centralizing automation and simplifying access enhances collaboration between DevOps engineers and developers. Planton
+Cloud fosters a unified environment where your team works more efficiently, reduces miscommunication, and accelerates
+project timelines.
+
+**Visualization Notes:**
+
+- Team members collaborating around a central platform, symbolizing unity and shared goals.
+- Symbols of efficiency, such as smoothly meshing gears or synchronized clocks.
+
+---
+
+### Scale DevOps Impact Without Scaling Team Size
+
+**Description:**
+
+Amplify your DevOps capabilities without increasing your team size. Planton Cloud allows you to support more developers,
+manage additional services, and handle complex infrastructure, all while maintaining your current resources.
+
+**Visualization Notes:**
+
+- A single DevOps engineer effectively overseeing a large-scale infrastructure with ease.
+- Graphs or charts illustrating increased productivity without added personnel.
+
+---
+
+### Secure, Auditable, and Compliant Operations
+
+**Description:**
+
+Maintain robust security and compliance with Planton Cloud's advanced access controls and auditing features. Ensure that
+automation is used appropriately and all changes are tracked across interfaces, providing peace of mind and meeting
+regulatory requirements.
+
+**Visualization Notes:**
+
+- Security icons like locks and shields overlaid on infrastructure diagrams.
+- Visual representation of an audit trail showing user actions and timestamps.
+
+---
+
+### Dogfooding: Proven Success from Our Own Experience
+
+**Description:**
+
+Our team uses Planton Cloud to manage complex projects with a small group of engineers. By dogfooding our platform,
+we've proven its effectiveness in enhancing DevOps efficiency and enabling rapid development without additional
+resources. See how our experience can benefit your organization.
+
+**Visualization Notes:**
+
+- Depiction of the Planton Cloud team actively using their product, emphasizing real-world application.
+- Before-and-after scenarios showcasing improvements achieved through Planton Cloud.
+
+---
+
+### Future-Proof Your DevOps with an Extensible Platform
+
+**Description:**
+
+Prepare for future challenges with Planton Cloud's extensible platform. As your organization grows, leverage our ability
+to create custom plugins, integrate new tools, and adapt to emerging technologies, ensuring your DevOps practices remain
+at the forefront of innovation.
+
+**Visualization Notes:**
+
+- Imagery of a flexible platform evolving over time, with modules being added seamlessly.
+- Symbols of growth and scalability, such as upward arrows or expanding networks.
+
+---
+
+## Call to Action
+
+## Call to Action
+
+**Title:** *Unleash the Full Potential of Your DevOps Team*
+
+**Description:**
+
+Unlock greater efficiency and innovation in your DevOps efforts. Enhance automation adoption, streamline operations, and focus on what you do best with Planton Cloud. Transform your workflow and drive impactful results across your organization.
+
+**Call-to-Action Buttons:** "Get Started Free" and "Book Demo"
+
+**Visual Idea:**
+
+- An inspiring image of DevOps engineers leading innovation, with developers seamlessly leveraging automation tools.
+- A dynamic pathway symbolizing progress and collaboration, representing the journey ahead with Planton Cloud.

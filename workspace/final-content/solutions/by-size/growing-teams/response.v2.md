@@ -1,0 +1,234 @@
+**Option 1:**
+
+---
+
+**Headline:**  
+Empower Your Expanding Team with Seamless Collaboration
+
+**Subheadline:**  
+Scale effortlessly with Planton Cloud's AI-powered DevOps platform designed for growing teams
+
+**Call-to-Action Buttons:**  
+"Get Started" and "Book Demo"
+
+**Visual Idea:**  
+An illustration of a flourishing tree with interconnected branches representing teams and sub-teams, symbolizing growth
+and collaboration within an organization.
+
+---
+
+**Option 2:**
+
+---
+
+**Headline:**  
+Unlock Growth Potential with Unified Teamwork
+
+**Subheadline:**  
+Accelerate innovation using Planton Cloud's collaborative tools tailored for expanding organizations
+
+**Call-to-Action Buttons:**  
+"Start Scaling Now" and "Request a Demo"
+
+**Visual Idea:**  
+A dynamic network of developers connected by glowing lines, building and expanding a complex structure together,
+representing unity and collective progress.
+
+---
+
+**Option 3:**
+
+---
+
+**Headline:**  
+Scale Your Success with AI-Powered Team Collaboration
+
+**Subheadline:**  
+Planton Cloud empowers growing teams with advanced DevOps solutions and robust security
+
+**Call-to-Action Buttons:**  
+"Try Planton Cloud" and "Schedule a Demo"
+
+**Visual Idea:**  
+A team of developers working seamlessly alongside Plantora, the AI assistant, with abstract visuals of code and
+infrastructure expanding outward, symbolizing growth and efficiency.
+
+---
+
+## Page Sections
+
+---
+
+**Collaborate Effortlessly with Teams and Sub-Teams**
+
+**Description:**
+
+As your organization grows, seamless collaboration becomes crucial. Planton Cloud enables you to create teams and
+sub-teams that mirror your organizational structure. With role-based access control, manage permissions effortlessly—new
+team members automatically inherit the appropriate access levels. This streamlined onboarding enhances productivity and
+keeps everyone aligned.
+
+**Visualization Notes:**
+
+- **Image Idea:** An organizational chart within Planton Cloud showing teams and sub-teams connected hierarchically.
+- **Visual Elements:** Icons representing team members, permissions badges, and flow lines indicating inheritance of
+  roles.
+
+---
+
+**Empower Developers with the Service Hub**
+
+**Description:**
+
+Accelerate innovation with the Service Hub—a centralized registry for all your services. Developers can quickly
+bootstrap new projects using cookiecutter templates from our Template Library. As services are deployed, they become
+visible to the entire team, fostering transparency and collaborative development.
+
+**Visualization Notes:**
+
+- **Image Idea:** A developer selecting a template from the Service Hub and initiating a new service.
+- **Visual Elements:** Screens showcasing the variety of templates and a dashboard displaying active services with
+  status indicators.
+
+---
+
+**Achieve Full Transparency with Auditable Intelligence**
+
+**Description:**
+
+Maintain complete visibility over every change in your infrastructure. Planton Cloud's Auditable Intelligence captures
+all configuration changes in familiar git diff format, regardless of whether they're made via CLI, web interface, or
+Plantora—the DevOps co-pilot. Easily track who made changes, what was altered, and the impact on your applications.
+
+**Visualization Notes:**
+
+- **Image Idea:** An audit log displaying changes with highlighted differences in code.
+- **Visual Elements:** Side-by-side comparisons, timestamps, user avatars, and colored code differences.
+
+---
+
+**Secure Access with Fine-Grained Control Powered by Zanzibar**
+
+**Description:**
+
+Protect your resources with Planton Cloud's advanced IAM system, powered by Zanzibar—the technology behind Google's
+robust access management. Implement fine-grained access control down to individual resources, ensuring the right people
+have appropriate access. Simplify permission management while enhancing security as your team expands.
+
+**Visualization Notes:**
+
+- **Image Idea:** A lock and key overlaying a multi-layered resource diagram.
+- **Visual Elements:** Security shields at different resource levels, illustrating controlled access points.
+
+---
+
+**Scale Limitlessly with Confidence**
+
+**Description:**
+
+As your application demands grow, Planton Cloud scales with you. Deploy unlimited resources and services to meet your
+evolving needs. With effortless CI/CD pipeline setups, your development teams can deploy frequently and reliably,
+accelerating innovation and reducing time-to-market.
+
+**Visualization Notes:**
+
+- **Image Idea:** An expanding network graph illustrating scaling services.
+- **Visual Elements:** Upward arrows, growth charts, and multiple deployment nodes representing scalability.
+
+---
+
+**Integrate Seamlessly with Your Existing Toolchain**
+
+**Description:**
+
+Planton Cloud fits into your current workflow by integrating with popular tools and systems. Connect effortlessly with
+source code management, monitoring, and alerting tools. We continuously expand our integrations to simplify day-two
+operations and empower your developers to use the tools they prefer.
+
+**Visualization Notes:**
+
+- **Image Idea:** Icons of tools like GitHub, GitLab, Jenkins, and Datadog connected to Planton Cloud.
+- **Visual Elements:** A flow diagram showing data moving smoothly between tools and Planton Cloud.
+
+---
+
+**Accelerate Development with Streamlined CI/CD**
+
+**Description:**
+
+Set up Continuous Integration and Continuous Deployment pipelines with ease. Planton Cloud's built-in IaC workflows
+automate deployments, ensuring consistency across environments. Developers can focus on coding while Planton Cloud
+handles the build and deployment processes.
+
+**Visualization Notes:**
+
+- **Image Idea:** A pipeline illustration showing code moving from commit to production.
+- **Visual Elements:** Stages labeled Build, Test, Deploy with automation gears and success indicators.
+
+---
+
+**Enhance Security Throughout Your Organization**
+
+**Description:**
+
+Security is integral for growing teams. Planton Cloud provides robust features like encrypted data storage, advanced
+secrets management, and adherence to network security best practices. Our IAM ensures only authorized users can make
+changes, safeguarding your infrastructure.
+
+**Visualization Notes:**
+
+- **Image Idea:** A shield encompassing a cloud filled with binary code, representing data encryption.
+- **Visual Elements:** Padlocks, secure connections, and compliance badges indicating high security standards.
+
+---
+
+**Boost Productivity with Plantora, Your AI DevOps Assistant**
+
+**Description:**
+
+Introducing Plantora, your AI-powered DevOps co-pilot. Interact through chat to manage deployments, configure
+environments, and more. Plantora streamlines operations, allowing your team to accomplish tasks quickly and intuitively,
+boosting overall productivity.
+
+**Visualization Notes:**
+
+- **Image Idea:** A developer engaging with Plantora on a screen, with chat bubbles displaying commands and responses.
+- **Visual Elements:** Plantora's avatar assisting, icons representing voice or text commands, and automated task
+  execution.
+
+---
+
+**Future-Proof Your Operations with Continuous Innovation**
+
+**Description:**
+
+Stay ahead of the curve with Planton Cloud's commitment to continuous improvement. As your team and needs grow, we
+introduce new integrations and features to support your journey. Focused on scalability, security, and innovation,
+Planton Cloud ensures your operations are ready for the future.
+
+**Visualization Notes:**
+
+- **Image Idea:** A road extending into a bright horizon with milestones marking new features.
+- **Visual Elements:** Update icons, futuristic designs, and symbols of innovation like lightbulbs or rockets.
+
+---
+
+**Call to Action**
+
+**Title:**  
+Ready to Empower Your Growing Team?
+
+**Description:**
+
+Unlock your team's full potential with Planton Cloud's collaborative and scalable DevOps platform. Enhance productivity,
+security, and innovation across your expanding organization.
+
+**Call-to-Action Buttons:**  
+"Get Started" and "Book Demo"
+
+**Visual Idea:**
+
+- **Image Idea:** A diverse team of developers high-fiving or collaborating effectively.
+- **Visual Elements:** Symbols of growth like plants or arrows, suggesting upward momentum and success.
+
+---
