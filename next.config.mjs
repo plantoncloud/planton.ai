@@ -1,7 +1,13 @@
-import type { NextConfig } from "next";
+// next.config.mjs
+import nextra from 'nextra'
 
-const nextConfig: NextConfig = {
-  /* config options here */
+const withNextra = nextra({
+  contentDirBasePath: '/docs',
+})
+
+export default withNextra({
+  reactStrictMode: true,
+
   async headers() {
     return [
       {
@@ -11,26 +17,25 @@ const nextConfig: NextConfig = {
           { key: 'Content-Type', value: 'text/plain; charset=utf-8' },
         ],
       },
-    ];
+    ]
   },
+
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
-      use: ["@svgr/webpack"],
-    });
-
-    return config;
+      use: ['@svgr/webpack'],
+    })
+    return config
   },
+
   // experimental: {
   //   turbo: {
   //     rules: {
-  //       "*.svg": {
-  //         as: "*.js",
-  //         loaders: ["@svgr/webpack"],
+  //       '*.svg': {
+  //         as: '*.js',
+  //         loaders: ['@svgr/webpack'],
   //       },
   //     },
   //   },
   // },
-};
-
-export default nextConfig;
+})
