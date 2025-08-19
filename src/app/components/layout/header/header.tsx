@@ -121,7 +121,7 @@ export const menuExplorer: IMenuItems[] = [
   {
     label: '',
     subLabel: 'Documentation',
-    href: 'https://docs.planton.cloud',
+    href: '/docs',
   },
   {
     label: '',
