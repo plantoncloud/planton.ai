@@ -20,14 +20,12 @@ export const SearchBar: FC = () => {
         onChange={handleSearch}
         size="small"
         className="w-full"
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon className="text-gray-400" />
-            </InputAdornment>
-          ),
-          className: 'bg-gray-700 text-white',
-        }}
+        slotProps={{input:{startAdornment: (
+          <InputAdornment position="start">
+            <SearchIcon className="text-gray-400" />
+          </InputAdornment>
+        ),
+        className: 'text-white',}}}
         sx={{
           '& .MuiOutlinedInput-root': {
             '& fieldset': {

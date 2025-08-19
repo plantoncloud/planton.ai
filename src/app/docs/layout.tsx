@@ -18,9 +18,9 @@ export default function DocsLayout({ children }: DocsLayoutProps) {
   };
 
   return (
-    <Box className="min-h-screen bg-gray-900">
+    <Box className="min-h-screen">
       {/* Header */}
-      <Box className="sticky top-0 z-10 bg-gray-800 border-b border-gray-700">
+      <Box className="sticky top-0 z-10 border-b border-gray-700">
         <Stack direction="row" className="items-center justify-between px-4 py-3">
           <Stack direction="row" className="items-center gap-4">
             <IconButton
@@ -40,7 +40,7 @@ export default function DocsLayout({ children }: DocsLayoutProps) {
 
       <Box className="flex">
         {/* Sidebar */}
-        <Box className="hidden md:block w-80 min-h-screen bg-gray-800 border-r border-gray-700">
+        <Box className="hidden md:block w-80 min-h-screen border-r border-gray-700">
           <DocsSidebar />
         </Box>
 
@@ -51,7 +51,7 @@ export default function DocsLayout({ children }: DocsLayoutProps) {
           onClose={handleSidebarToggle}
           className="md:hidden"
           PaperProps={{
-            className: 'w-80 bg-gray-800',
+            className: 'w-80',
           }}
         >
           <Stack direction="row" className="items-center justify-between p-4 border-b border-gray-700">
