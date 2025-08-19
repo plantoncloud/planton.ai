@@ -121,7 +121,7 @@ export const menuExplorer: IMenuItems[] = [
   {
     label: '',
     subLabel: 'Documentation',
-    href: 'https://docs.planton.cloud',
+    href: '/docs',
   },
   {
     label: '',
@@ -338,6 +338,13 @@ export function Header() {
       <HeaderMobile className="md:hidden" />
       <HeaderComputer className="hidden md:flex" />
       <MenuSection>
+        <Btn
+          className="text-text-secondary"
+          LinkComponent={Link}
+          href="/docs"
+        >
+          Docs
+        </Btn>
         <Btn
           className="text-text-secondary"
           LinkComponent={Link}
