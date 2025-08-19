@@ -341,6 +341,13 @@ export function Header() {
         <Btn
           className="text-text-secondary"
           LinkComponent={Link}
+          href="/docs"
+        >
+          Docs
+        </Btn>
+        <Btn
+          className="text-text-secondary"
+          LinkComponent={Link}
           href="https://console.planton.cloud/"
           target="_blank"
         >
