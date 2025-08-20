@@ -75,7 +75,7 @@ const groups: IGroup[] = [
     items: [
       { title: 'All Features', url: '/features' },
       { title: 'Documentation', url: 'https://docs.planton.cloud/' },
-      { title: 'Blog', url: '/blog' },
+      { title: 'Blog', url: '/blogs' },
     ],
   },
 ];

@@ -126,7 +126,7 @@ export const menuExplorer: IMenuItems[] = [
   {
     label: '',
     subLabel: 'Blog',
-    href: '/blog',
+    href: '/blogs',
   },
 ];
 export const menuByUseCases: IMenuItems[] = [
