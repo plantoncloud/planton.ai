@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 
-const DOCS_ROOT = path.join(process.cwd(), 'workspace/final-content');
+const DOCS_ROOT = path.join(process.cwd(), 'workspace/docs-content');
 
 export interface DocItem {
   name: string;
