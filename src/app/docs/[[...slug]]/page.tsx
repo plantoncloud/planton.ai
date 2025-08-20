@@ -1,7 +1,8 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { MarkdownRenderer } from '../components/MarkdownRenderer';
-import { getMarkdownContent, getDocumentationStructure, DocItem } from '../utils/fileSystem';
+import { MDXRenderer } from '../../../components/MDXRenderer';
+import { getContent, getDocumentationStructure, DocItem } from '../utils/fileSystem';
 import { Box, Typography, Paper } from '@mui/material';
 import Link from 'next/link';
 
@@ -12,7 +13,7 @@ export async function generateMetadata({ params }: { params: DocsParams }): Prom
   const path = slug.join('/');
 
   try {
-    const content = await getMarkdownContent(path);
+    const content = await getContent(path);
     const title = content.data?.title || slug[slug.length - 1] || 'Documentation';
 
     return {
@@ -126,11 +127,21 @@ export default async function DocsPage({ params }: { params: DocsParams }) {
   }
 
   try {
-    const content = await getMarkdownContent(path);
+    const content = await getContent(path);
 
-    return (
-      <MarkdownRenderer content={content.content} />
-    );
+    // Render based on file type
+    if (content.type === 'mdx') {
+      return (
+        <MDXRenderer 
+          source={content.content} 
+          components={{}}
+        />
+      );
+    } else {
+      return (
+        <MarkdownRenderer content={content.content} />
+      );
+    }
   } catch (error) {
     console.error('Error loading documentation:', error);
     notFound();

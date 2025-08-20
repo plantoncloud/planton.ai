@@ -225,6 +225,52 @@ export async function getMarkdownContent(filePath: string): Promise<MarkdownCont
   throw new Error(`No markdown file found for path: ${filePath}`);
 }
 
+export async function getMDXContent(filePath: string): Promise<MarkdownContent> {
+  const possiblePaths = [
+    path.join(DOCS_ROOT, `${filePath}.mdx`),
+    path.join(DOCS_ROOT, filePath, 'index.mdx'),
+    path.join(DOCS_ROOT, filePath, 'README.mdx'),
+  ];
+
+  for (const filePath of possiblePaths) {
+    if (fs.existsSync(filePath)) {
+      const fileContent = fs.readFileSync(filePath, 'utf-8');
+      const { content, data } = matter(fileContent);
+      return { content, data };
+    }
+  }
+
+  // If no MDX file found, try to find any .mdx file in the directory
+  const dirPath = path.join(DOCS_ROOT, filePath);
+  if (fs.existsSync(dirPath) && fs.statSync(dirPath).isDirectory()) {
+    const files = fs.readdirSync(dirPath);
+    const mdxFile = files.find(file => file.endsWith('.mdx'));
+    if (mdxFile) {
+      const fileContent = fs.readFileSync(path.join(dirPath, mdxFile), 'utf-8');
+      const { content, data } = matter(fileContent);
+      return { content, data };
+    }
+  }
+
+  throw new Error(`No MDX file found for path: ${filePath}`);
+}
+
+export async function getContent(filePath: string): Promise<{ content: string; data: any; type: 'md' | 'mdx' }> {
+  // Try MDX first
+  try {
+    const mdxContent = await getMDXContent(filePath);
+    return { ...mdxContent, type: 'mdx' as const };
+  } catch (error) {
+    // If MDX not found, try markdown
+    try {
+      const mdContent = await getMarkdownContent(filePath);
+      return { ...mdContent, type: 'md' as const };
+    } catch (mdError) {
+      throw new Error(`No content file found for path: ${filePath}`);
+    }
+  }
+}
+
 export async function getDocumentationStructure(): Promise<DocItem[]> {
   return buildStructure(DOCS_ROOT);
 }
@@ -280,7 +326,7 @@ function buildStructure(dirPath: string, relativePath: string = ''): DocItem[] {
           externalUrl: metadata.externalUrl
         });
       }
-    } else if (item.endsWith('.md')) {
+    } else if (item.endsWith('.md') || item.endsWith('.mdx')) {
       // Skip certain files that are not meant for documentation
       if (!item.startsWith('prompt.') && !item.startsWith('response.') && !item.includes('.not-good.')) {
         try {
@@ -289,12 +335,12 @@ function buildStructure(dirPath: string, relativePath: string = ''): DocItem[] {
           const category = relativePath.split('/')[0] || 'general';
           
           structure.push({
-            name: item.replace('.md', ''),
+            name: item.replace('.md', '').replace('.mdx', ''),
             type: 'file',
-            path: itemRelativePath.replace('.md', ''),
-            title: data.title || formatName(item.replace('.md', '')),
+            path: itemRelativePath.replace('.md', '').replace('.mdx', ''),
+            title: data.title || formatName(item.replace('.md', '').replace('.mdx', '')),
             description: data.description,
-            icon: data.icon || getDefaultIcon('file', item.replace('.md', ''), category),
+            icon: data.icon || getDefaultIcon('file', item.replace('.md', '').replace('.mdx', ''), category),
             category,
             order: data.order || 0,
             badge: data.badge,
@@ -306,11 +352,11 @@ function buildStructure(dirPath: string, relativePath: string = ''): DocItem[] {
           // Fallback without metadata
           const category = relativePath.split('/')[0] || 'general';
           structure.push({
-            name: item.replace('.md', ''),
+            name: item.replace('.md', '').replace('.mdx', ''),
             type: 'file',
-            path: itemRelativePath.replace('.md', ''),
-            title: formatName(item.replace('.md', '')),
-            icon: getDefaultIcon('file', item.replace('.md', ''), category),
+            path: itemRelativePath.replace('.md', '').replace('.mdx', ''),
+            title: formatName(item.replace('.md', '').replace('.mdx', '')),
+            icon: getDefaultIcon('file', item.replace('.md', '').replace('.mdx', ''), category),
             category,
             order: 0
           });
