@@ -5,13 +5,13 @@ author:
   - name: Developer Team
     title: Full Stack Developers
     bio: "Building robust and scalable applications with modern technologies. We love clean code and great user experiences."
-    profilePicture: https://res.cloudinary.com/dmukukwp6/image/upload/v1/author-profiles/developer-team.jpg
+    profilePicture: https://robohash.org/DeveloperTeam?set=set4
     github: https://github.com/planton-ai
     website: https://planton.ai
   - name: Alex Rodriguez
     title: Senior Frontend Engineer
     bio: "Specializing in React, TypeScript, and modern web development. Always exploring new ways to improve user experience."
-    profilePicture: https://res.cloudinary.com/dmukukwp6/image/upload/v1/author-profiles/alex-rodriguez.jpg
+    profilePicture: https://api.dicebear.com/7.x/avataaars/svg?seed=AlexRodriguez
     twitter: https://twitter.com/alexrodriguez_dev
     github: https://github.com/alexrodriguez
 featuredImage: >-
