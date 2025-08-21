@@ -2,11 +2,22 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 
+export interface Author {
+  name: string;
+  title: string;
+  bio?: string;
+  profilePicture?: string;
+  twitter?: string;
+  github?: string;
+  linkedin?: string;
+  website?: string;
+}
+
 export interface BlogPost {
   slug: string;
   title: string;
   date: string;
-  author: string[];
+  author: Author[];
   featuredImage?: string;
   featuredImageType?: string;
   featuredVideo?: string;
@@ -80,7 +91,7 @@ export function getBlogPostsByTag(tag: string): BlogPost[] {
 
 export function getBlogPostsByAuthor(author: string): BlogPost[] {
   const allPosts = getAllBlogPosts();
-  return allPosts.filter((post) => post.author.includes(author));
+  return allPosts.filter((post) => post.author.some(a => a.name === author));
 }
 
 /**
@@ -92,11 +103,26 @@ export function getBlogPostsByAuthor(author: string): BlogPost[] {
  * @returns A complete MDX string with frontmatter and content
  */
 export function reconstructMDXContent(post: BlogPost): string {
+  const authorYaml = post.author.map(author => {
+    if (typeof author === 'string') {
+      return `  - ${author}`;
+    } else {
+      return `  - name: ${author.name}
+    title: ${author.title}
+    ${author.bio ? `bio: ${author.bio}` : ''}
+    ${author.profilePicture ? `profilePicture: ${author.profilePicture}` : ''}
+    ${author.twitter ? `twitter: ${author.twitter}` : ''}
+    ${author.github ? `github: ${author.github}` : ''}
+    ${author.linkedin ? `linkedin: ${author.linkedin}` : ''}
+    ${author.website ? `website: ${author.website}` : ''}`;
+    }
+  }).join('\n');
+
   return `---
 title: "${post.title}"
 date: ${post.date}
 author:
-  - ${post.author.join('\n  - ')}
+${authorYaml}
 ${post.featuredImage ? `featuredImage: >-\n  ${post.featuredImage}` : ''}
 ${post.featuredImageType ? `featuredImageType: ${post.featuredImageType}` : ''}
 ${post.featuredVideo ? `featuredVideo: ${post.featuredVideo}` : ''}

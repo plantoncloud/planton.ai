@@ -46,7 +46,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
           <div className="flex items-center gap-2">
             {post.author.map((author, index) => (
               <span key={index} className="font-medium">
-                {author}
+                {author.name}
               </span>
             ))}
           </div>

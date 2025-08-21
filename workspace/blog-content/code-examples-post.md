@@ -2,7 +2,18 @@
 title: "Code Examples and Syntax Highlighting"
 date: 2025-01-15
 author:
-  - developer-team
+  - name: Developer Team
+    title: Full Stack Developers
+    bio: "Building robust and scalable applications with modern technologies. We love clean code and great user experiences."
+    profilePicture: https://res.cloudinary.com/dmukukwp6/image/upload/v1/author-profiles/developer-team.jpg
+    github: https://github.com/planton-ai
+    website: https://planton.ai
+  - name: Alex Rodriguez
+    title: Senior Frontend Engineer
+    bio: "Specializing in React, TypeScript, and modern web development. Always exploring new ways to improve user experience."
+    profilePicture: https://res.cloudinary.com/dmukukwp6/image/upload/v1/author-profiles/alex-rodriguez.jpg
+    twitter: https://twitter.com/alexrodriguez_dev
+    github: https://github.com/alexrodriguez
 featuredImage: >-
   https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80
 tags:
