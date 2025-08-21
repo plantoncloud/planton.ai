@@ -13,7 +13,7 @@ Welcome to our documentation! This system now supports dynamic sidebar generatio
 ## How to Add New Documentation
 
 ### 1. Basic Markdown File
-Create a `.md` file anywhere in the `workspace/docs-content/` directory:
+Create a `.md` file anywhere in the `content/docs/` directory:
 
 ```markdown
 ---
