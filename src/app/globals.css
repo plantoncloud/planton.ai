@@ -31,3 +31,144 @@ body {
   transition: margin-top 0.5s ease-in-out;
   text-align: left;
 }
+
+/* Line clamp utilities for blog posts */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Syntax highlighting for code blocks */
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1rem;
+  background: #1e1e1e;
+  color: #d4d4d4;
+  line-height: 1.5;
+}
+
+/* VS Code Dark+ Theme Colors */
+.hljs-keyword,
+.hljs-operator,
+.hljs-pattern-match {
+  color: #569cd6;
+  font-weight: normal;
+}
+
+.hljs-function,
+.hljs-class,
+.hljs-params {
+  color: #dcdcaa;
+}
+
+.hljs-comment {
+  color: #6a9955;
+  font-style: italic;
+}
+
+.hljs-string,
+.hljs-built_in,
+.hljs-char,
+.hljs-template-variable,
+.hljs-strong {
+  color: #ce9178;
+}
+
+.hljs-number,
+.hljs-literal {
+  color: #b5cea8;
+}
+
+.hljs-variable,
+.hljs-template-tag {
+  color: #9cdcfe;
+}
+
+.hljs-title,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-section,
+.hljs-type {
+  color: #4ec9b0;
+}
+
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link {
+  color: #569cd6;
+}
+
+.hljs-deletion {
+  color: #f14c4c;
+}
+
+.hljs-addition {
+  color: #b5cea8;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-tag {
+  color: #569cd6;
+}
+
+.hljs-selector-tag {
+  color: #d7ba7d;
+}
+
+.hljs-attribute {
+  color: #9cdcfe;
+}
+
+.hljs-attr {
+  color: #9cdcfe;
+}
+
+.hljs-value {
+  color: #ce9178;
+}
+
+.hljs-meta {
+  color: #569cd6;
+}
+
+.hljs-meta-string {
+  color: #ce9178;
+}
+
+/* Custom enhancements for code blocks */
+pre {
+  position: relative;
+}
+
+pre code {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace !important;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Copy button for code blocks */
+pre:hover::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  z-index: 1;
+}

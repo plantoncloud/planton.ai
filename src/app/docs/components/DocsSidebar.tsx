@@ -3,12 +3,13 @@
 import { FC, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Box, Typography, Collapse, IconButton } from '@mui/material';
+import { Box, Typography, Collapse, IconButton, Chip } from '@mui/material';
 import {
   ExpandMore as ExpandMoreIcon,
   ExpandLess as ExpandLessIcon,
   Folder as FolderIcon,
-  Description as FileIcon
+  Description as FileIcon,
+  OpenInNew as ExternalLinkIcon
 } from '@mui/icons-material';
 import { DocItem } from '../utils/fileSystem';
 
@@ -20,21 +21,82 @@ interface SidebarItemProps {
   item: DocItem;
   level?: number;
   onNavigate?: () => void;
+  expandedItems?: Set<string>;
+  onToggleExpanded?: (itemPath: string, parentPath?: string) => void;
 }
 
-const SidebarItem: FC<SidebarItemProps> = ({ item, level = 0, onNavigate }) => {
-  const [expanded, setExpanded] = useState(level < 2); // Auto-expand first 2 levels
+const SidebarItem: FC<SidebarItemProps> = ({ 
+  item, 
+  level = 0, 
+  onNavigate, 
+  expandedItems = new Set(), 
+  onToggleExpanded 
+}) => {
   const pathname = usePathname();
   const isActive = pathname === `/docs/${item.path}`;
+  const isExpanded = expandedItems.has(item.path || '');
 
   const handleToggle = () => {
-    setExpanded(!expanded);
+    if (onToggleExpanded && item.path) {
+      // Pass the current level's parent path to ensure only one sibling is expanded
+      const parentPath = getParentPath(item.path);
+      onToggleExpanded(item.path, parentPath);
+    }
   };
 
   const handleNavigate = () => {
     if (onNavigate) {
       onNavigate();
     }
+  };
+
+  // Helper function to get parent path for the current level
+  const getParentPath = (itemPath: string): string | undefined => {
+    if (!itemPath) return undefined;
+    const pathParts = itemPath.split('/');
+    if (pathParts.length <= 1) return undefined;
+    // Remove the last part to get the parent path
+    return pathParts.slice(0, -1).join('/');
+  };
+
+  // Render icon based on item type and metadata
+  const renderIcon = () => {
+    if (item.icon) {
+      return (
+        <span className="text-lg" role="img" aria-label={item.title || item.name}>
+          {item.icon}
+        </span>
+      );
+    }
+    
+    if (item.type === 'directory') {
+      return <FolderIcon className="text-blue-400" fontSize="small" />;
+    }
+    
+    return <FileIcon className="text-gray-400" fontSize="small" />;
+  };
+
+  // Render badge if present
+  const renderBadge = () => {
+    if (!item.badge) return null;
+    
+    const badgeColors: Record<string, string> = {
+      'Popular': 'bg-green-100 text-green-800',
+      'Beta': 'bg-blue-100 text-blue-800',
+      'New': 'bg-purple-100 text-purple-800',
+      'Deprecated': 'bg-red-100 text-red-800',
+      'Experimental': 'bg-yellow-100 text-yellow-800'
+    };
+    
+    const colorClass = badgeColors[item.badge] || 'bg-gray-100 text-gray-800';
+    
+    return (
+      <Chip
+        label={item.badge}
+        size="small"
+        className={`ml-2 text-xs ${colorClass}`}
+      />
+    );
   };
 
   if (item.type === 'directory') {
@@ -45,16 +107,17 @@ const SidebarItem: FC<SidebarItemProps> = ({ item, level = 0, onNavigate }) => {
           onClick={handleToggle}
         >
           <Box className="flex items-center gap-2">
-            <FolderIcon className="text-blue-400" fontSize="small" />
+            {renderIcon()}
             <Typography className="text-gray-300 text-sm font-medium">
-              {formatName(item.name)}
+              {item.title || formatName(item.name)}
             </Typography>
+            {renderBadge()}
           </Box>
           <IconButton size="small" className="text-gray-400">
-            {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </IconButton>
         </Box>
-        <Collapse in={expanded}>
+        <Collapse in={isExpanded}>
           <Box className="ml-4">
             {item.children?.map((child, index) => (
               <SidebarItem
@@ -62,11 +125,34 @@ const SidebarItem: FC<SidebarItemProps> = ({ item, level = 0, onNavigate }) => {
                 item={child}
                 level={level + 1}
                 onNavigate={onNavigate}
+                expandedItems={expandedItems}
+                onToggleExpanded={onToggleExpanded}
               />
             ))}
           </Box>
         </Collapse>
       </Box>
+    );
+  }
+
+  // Handle external links
+  if (item.isExternal && item.externalUrl) {
+    return (
+      <a 
+        href={item.externalUrl} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="block"
+      >
+        <Box className="flex items-center gap-2 px-4 py-2 hover:bg-gray-700 cursor-pointer text-gray-300">
+          {renderIcon()}
+          <Typography className="text-sm flex-1">
+            {item.title || formatName(item.name)}
+          </Typography>
+          <ExternalLinkIcon className="text-gray-400" fontSize="small" />
+          {renderBadge()}
+        </Box>
+      </a>
     );
   }
 
@@ -77,10 +163,11 @@ const SidebarItem: FC<SidebarItemProps> = ({ item, level = 0, onNavigate }) => {
           isActive ? 'bg-blue-600 text-white' : 'text-gray-300'
         }`}
       >
-        <FileIcon className="text-gray-400" fontSize="small" />
-        <Typography className="text-sm">
-          {formatName(item.name)}
+        {renderIcon()}
+        <Typography className="text-sm flex-1">
+          {item.title || formatName(item.name)}
         </Typography>
+        {renderBadge()}
       </Box>
     </Link>
   );
@@ -98,6 +185,55 @@ function formatName(name: string): string {
 export const DocsSidebar: FC<DocsSidebarProps> = ({ onNavigate }) => {
   const [structure, setStructure] = useState<DocItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+
+  const handleToggleExpanded = (itemPath: string, parentPath?: string) => {
+    setExpandedItems(prev => {
+      const newSet = new Set(prev);
+      
+      if (newSet.has(itemPath)) {
+        // If item is already expanded, just collapse it
+        newSet.delete(itemPath);
+      } else {
+        // If expanding a new item, first collapse any siblings at the same level
+        if (parentPath) {
+          // Find and collapse all items that have the same parent
+          const itemsToCollapse: string[] = [];
+          prev.forEach(expandedPath => {
+            if (expandedPath !== itemPath && expandedPath.startsWith(parentPath + '/')) {
+              const expandedPathParts = expandedPath.split('/');
+              const itemPathParts = itemPath.split('/');
+              // Check if they're at the same level (same number of path segments)
+              if (expandedPathParts.length === itemPathParts.length) {
+                itemsToCollapse.push(expandedPath);
+              }
+            }
+          });
+          itemsToCollapse.forEach(path => newSet.delete(path));
+        } else {
+          // Handle root level items (no parent path)
+          // Collapse all other root level items
+          const itemsToCollapse: string[] = [];
+          prev.forEach(expandedPath => {
+            if (expandedPath !== itemPath) {
+              const expandedPathParts = expandedPath.split('/');
+              const itemPathParts = itemPath.split('/');
+              // Check if they're both at root level (only one path segment)
+              if (expandedPathParts.length === 1 && itemPathParts.length === 1) {
+                itemsToCollapse.push(expandedPath);
+              }
+            }
+          });
+          itemsToCollapse.forEach(path => newSet.delete(path));
+        }
+        
+        // Add the new item
+        newSet.add(itemPath);
+      }
+      
+      return newSet;
+    });
+  };
 
   useEffect(() => {
     const loadStructure = async () => {
@@ -138,6 +274,8 @@ export const DocsSidebar: FC<DocsSidebarProps> = ({ onNavigate }) => {
             key={index}
             item={item}
             onNavigate={onNavigate}
+            expandedItems={expandedItems}
+            onToggleExpanded={handleToggleExpanded}
           />
         ))}
       </Box>
