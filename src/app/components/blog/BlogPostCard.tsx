@@ -9,7 +9,7 @@ interface BlogPostCardProps {
 
 const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   return (
-    <article className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+    <article className="bg-gray-800 border border-gray-700 rounded-lg shadow-lg overflow-hidden hover:shadow-xl hover:border-gray-600 transition-all duration-300">
       {post.featuredImage && (
         <div className="aspect-video overflow-hidden">
           <img
@@ -25,27 +25,27 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
           {post.tags.map((tag, index) => (
             <span
               key={index}
-              className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full"
+              className="px-2 py-1 bg-blue-900 text-blue-200 text-xs font-medium rounded-full border border-blue-700"
             >
               {tag}
             </span>
           ))}
         </div>
         
-        <h2 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
+        <h2 className="text-xl font-bold text-white mb-2 line-clamp-2">
           {post.title}
         </h2>
         
         {post.excerpt && (
-          <p className="text-gray-600 mb-4 line-clamp-3">
+          <p className="text-gray-300 mb-4 line-clamp-3">
             {post.excerpt}
           </p>
         )}
         
-        <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+        <div className="flex items-center justify-between text-sm text-gray-400 mb-4">
           <div className="flex items-center gap-2">
             {post.author.map((author, index) => (
-              <span key={index} className="font-medium">
+              <span key={index} className="font-medium text-gray-300">
                 {author.name}
               </span>
             ))}
@@ -57,7 +57,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
         
         <Link
           href={`/blog/${post.slug}`}
-          className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors"
+          className="inline-flex items-center text-blue-400 hover:text-blue-300 font-medium transition-colors"
         >
           Read more
           <svg

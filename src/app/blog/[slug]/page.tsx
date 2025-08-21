@@ -26,7 +26,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const mdxContent = reconstructMDXContent(post);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <MDXRenderer mdxContent={mdxContent} />
     </div>
   );
