@@ -243,7 +243,7 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ mdxContent }) => {
                     ),
                     // Custom image component that handles videos as video players
                     img: ({ src, alt }) => {
-                      if (!src) return null;
+                      if (!src || typeof src !== 'string') return null;
                       
                       // Check if it's a video file
                       const isVideo = /\.(mp4|webm|ogg|mov|avi|mkv|wmv|flv)$/i.test(src);
