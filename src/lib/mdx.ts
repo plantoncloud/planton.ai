@@ -26,7 +26,7 @@ export interface BlogPost {
   content: string;
 }
 
-const postsDirectory = path.join(process.cwd(), 'workspace/blog-content');
+const postsDirectory = path.join(process.cwd(), 'content/blog');
 
 export function getBlogPostBySlug(slug: string): BlogPost | null {
   try {
