@@ -341,6 +341,13 @@ export function Header() {
         <Btn
           className="text-text-secondary"
           LinkComponent={Link}
+          href="/blog"
+        >
+          Blogs
+        </Btn>
+        <Btn
+          className="text-text-secondary"
+          LinkComponent={Link}
           href="/docs"
         >
           Docs
