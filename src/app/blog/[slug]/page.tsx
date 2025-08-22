@@ -1,6 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { getBlogPostBySlug, getAllBlogPosts, reconstructMDXContent } from '@/lib/mdx';
+import { getBlogPostContentBySlug, getAllBlogPosts, MDXParser } from '@/lib/mdx';
 import MDXRenderer from '@/app/components/blog/MDXRenderer';
 import BlogLayout from '@/app/components/blog/BlogLayout';
 
@@ -17,17 +17,15 @@ export async function generateStaticParams() {
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
-  const post = getBlogPostBySlug(slug);
+  const post = getBlogPostContentBySlug(slug);
   
   if (!post) {
     notFound();
   }
 
-  // Get all posts for the sidebar
   const allPosts = getAllBlogPosts();
 
-  // Reconstruct the MDX content with frontmatter using the utility function
-  const mdxContent = reconstructMDXContent(post);
+  const mdxContent = MDXParser.reconstructMDX(post);
 
   return (
     <BlogLayout posts={allPosts} currentSlug={slug}>

@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { MarkdownRenderer } from '../components/MarkdownRenderer';
-import { getMarkdownContent, getDocumentationStructure, DocItem } from '../utils/fileSystem';
-
+import { getMarkdownContent, getDocumentationStructure, DocItem } from '@/app/docs/utils/fileSystem';
+import MDXRenderer from '@/app/components/blog/MDXRenderer';
+import { MDXParser } from '@/lib/mdx';
 type DocsParams = Promise<{ slug?: string[] }>;
 
 export async function generateMetadata({ params }: { params: DocsParams }): Promise<Metadata> {
@@ -29,6 +29,9 @@ export async function generateStaticParams() {
   const structure = await getDocumentationStructure();
   const params: { slug: string[] }[] = [];
 
+  // Add the root docs path
+  params.push({ slug: [] });
+
   const addPaths = (items: DocItem[], currentPath: string[] = []) => {
     items.forEach(item => {
       if (item.type === 'file') {
@@ -47,25 +50,11 @@ export default async function DocsPage({ params }: { params: DocsParams }) {
   const { slug = [] } = await params;
   const path = slug.join('/');
 
-  // Handle root docs page by rendering content/docs/index.(md|mdx)
-  if (slug.length === 0) {
-    try {
-      const content = await getMarkdownContent('');
-      return (
-        <MarkdownRenderer content={content.content} />
-      );
-    } catch (error) {
-      console.error('Error loading root documentation index:', error);
-      // Fallback to notFound to show the 404 UI if index is missing
-      notFound();
-    }
-  }
-
   try {
-    const content = await getMarkdownContent(path);
+    const content = await getMarkdownContent(path || 'index');
 
     return (
-      <MarkdownRenderer content={content.content} />
+      <MDXRenderer mdxContent={MDXParser.reconstructMDX(content.content)} />
     );
   } catch (error) {
     console.error('Error loading documentation:', error);

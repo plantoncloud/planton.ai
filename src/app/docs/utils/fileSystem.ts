@@ -1,8 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-
-const DOCS_ROOT = path.join(process.cwd(), 'content/docs');
+import { DOCS_DIRECTORY } from '@/lib/constants';
 
 export interface DocItem {
   name: string;
@@ -312,12 +311,12 @@ const getDefaultIcon = (type: string, name: string, category?: string): string =
 export async function getMarkdownContent(filePath: string): Promise<MarkdownContent> {
   // Try different file extensions and paths (.md and .mdx)
   const possiblePaths = [
-    path.join(DOCS_ROOT, `${filePath}.md`),
-    path.join(DOCS_ROOT, `${filePath}.mdx`),
-    path.join(DOCS_ROOT, filePath, 'index.md'),
-    path.join(DOCS_ROOT, filePath, 'index.mdx'),
-    path.join(DOCS_ROOT, filePath, 'README.md'),
-    path.join(DOCS_ROOT, filePath, 'README.mdx'),
+    path.join(DOCS_DIRECTORY, `${filePath}.md`),
+    path.join(DOCS_DIRECTORY, `${filePath}.mdx`),
+    path.join(DOCS_DIRECTORY, filePath, 'index.md'),
+    path.join(DOCS_DIRECTORY, filePath, 'index.mdx'),
+    path.join(DOCS_DIRECTORY, filePath, 'README.md'),
+    path.join(DOCS_DIRECTORY, filePath, 'README.mdx'),
   ];
 
   for (const candidatePath of possiblePaths) {
@@ -329,7 +328,7 @@ export async function getMarkdownContent(filePath: string): Promise<MarkdownCont
   }
 
   // If no markdown file found, try to find any .md or .mdx file in the directory
-  const dirPath = path.join(DOCS_ROOT, filePath);
+  const dirPath = path.join(DOCS_DIRECTORY, filePath);
   if (fs.existsSync(dirPath) && fs.statSync(dirPath).isDirectory()) {
     const files = fs.readdirSync(dirPath);
     const mdLikeFile = files.find(file => file.endsWith('.md') || file.endsWith('.mdx'));
@@ -344,7 +343,7 @@ export async function getMarkdownContent(filePath: string): Promise<MarkdownCont
 }
 
 export async function getDocumentationStructure(): Promise<DocItem[]> {
-  return buildStructure(DOCS_ROOT);
+  return buildStructure(DOCS_DIRECTORY);
 }
 
 function buildStructure(dirPath: string, relativePath: string = ''): DocItem[] {
