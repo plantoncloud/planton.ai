@@ -98,7 +98,104 @@ const iconMap: Record<string, string> = {
   'gdpr': '🇪🇺',
   'ccpa': '🇺🇸',
   'terms': '📜',
-  'policy': '📋'
+  'policy': '📋',
+  // Additional icons you can add
+  'welcome': '👋',
+  'home': '🏠',
+  'star': '⭐',
+  'heart': '❤️',
+  'fire': '🔥',
+  'sparkles': '✨',
+  'light': '💡',
+  'zap': '⚡',
+  'wave': '👋',
+  'party': '🎉',
+  'gift': '🎁',
+  'trophy': '🏆',
+  'target': '🎯',
+  'compass': '🧭',
+  'map': '🗺️',
+  'telescope': '🔭',
+  'microscope': '🔬',
+  'crystal': '🔮',
+  'gem': '💎',
+  'crown': '👑',
+  'checkmark': '✅',
+  'lightning': '⚡',
+  'sunrise': '🌅',
+  'rainbow': '🌈',
+  'comet': '☄️',
+  'satellite': '🛰️',
+  'spaceship': '🚀',
+  'airplane': '✈️',
+  'helicopter': '🚁',
+  'parachute': '🪂',
+  'anchor': '⚓',
+  'sailboat': '⛵',
+  'speedboat': '🚤',
+  'construction': '🚧',
+  'wrench': '🔧',
+  'hammer': '🔨',
+  'toolbox': '🧰',
+  'magnet': '🧲',
+  'link': '🔗',
+  'chains': '⛓️',
+  'unlock': '🔓',
+  'key': '🔑',
+  'bell': '🔔',
+  'megaphone': '📣',
+  'loudspeaker': '📢',
+  'postal': '📮',
+  'inbox': '📥',
+  'outbox': '📤',
+  'package': '📦',
+  'label': '🏷️',
+  'bookmark': '🔖',
+  'calendar': '📅',
+  'clock': '🕐',
+  'hourglass': '⏳',
+  'stopwatch': '⏱️',
+  'timer': '⏲️',
+  'alarm': '⏰',
+  'watch': '⌚',
+  'battery': '🔋',
+  'plug': '🔌',
+  'bulb': '💡',
+  'flashlight': '🔦',
+  'candle': '🕯️',
+  'diya': '🪔',
+  'bricks': '🧱',
+  'window': '🪟',
+  'door': '🚪',
+  'bed': '🛏️',
+  'couch': '🛋️',
+  'chair': '🪑',
+  'toilet': '🚽',
+  'shower': '🚿',
+  'bathtub': '🛁',
+  'mouse': '🖱️',
+  'keyboard': '⌨️',
+  'printer': '🖨️',
+  'fax': '📠',
+  'television': '📺',
+  'radio': '📻',
+  'microphone': '🎤',
+  'headphones': '🎧',
+  'speaker': '🔈',
+  'mute': '🔇',
+  'sound': '🔊',
+  'notification': '🔔',
+  'search': '🔍',
+  'zoom': '🔎',
+  'syringe': '💉',
+  'pill': '💊',
+  'dna': '🧬',
+  'microbe': '🦠',
+  'petri': '🧫',
+  'test': '🧪',
+  'stethoscope': '🩺',
+  'xray': '🩻',
+  'adhesive': '🩹'
 };
 
 // Category-based icon mapping
@@ -128,6 +225,24 @@ const categoryIcons: Record<string, string> = {
   'llm-observability': '🤖',
   'max-ai': '🎯'
 };
+
+// Resolve an icon value coming from frontmatter. Accepts PostHog-style names
+// (e.g., "docs", "guide", "api") and maps them to emoji. Falls back to
+// default icon logic if the provided value isn't recognized.
+function resolveIcon(
+  metaIcon: string | undefined,
+  type: 'file' | 'directory',
+  name: string,
+  category?: string
+): string {
+  if (metaIcon) {
+    const mapped = iconMap[metaIcon];
+    if (mapped) {
+      return mapped;
+    }
+  }
+  return getDefaultIcon(type, name, category);
+}
 
 // Default icons for different file types
 const getDefaultIcon = (type: string, name: string, category?: string): string => {
@@ -195,28 +310,31 @@ const getDefaultIcon = (type: string, name: string, category?: string): string =
 };
 
 export async function getMarkdownContent(filePath: string): Promise<MarkdownContent> {
-  // Try different file extensions and paths
+  // Try different file extensions and paths (.md and .mdx)
   const possiblePaths = [
     path.join(DOCS_ROOT, `${filePath}.md`),
+    path.join(DOCS_ROOT, `${filePath}.mdx`),
     path.join(DOCS_ROOT, filePath, 'index.md'),
+    path.join(DOCS_ROOT, filePath, 'index.mdx'),
     path.join(DOCS_ROOT, filePath, 'README.md'),
+    path.join(DOCS_ROOT, filePath, 'README.mdx'),
   ];
 
-  for (const filePath of possiblePaths) {
-    if (fs.existsSync(filePath)) {
-      const fileContent = fs.readFileSync(filePath, 'utf-8');
+  for (const candidatePath of possiblePaths) {
+    if (fs.existsSync(candidatePath)) {
+      const fileContent = fs.readFileSync(candidatePath, 'utf-8');
       const { content, data } = matter(fileContent);
       return { content, data };
     }
   }
 
-  // If no markdown file found, try to find any .md file in the directory
+  // If no markdown file found, try to find any .md or .mdx file in the directory
   const dirPath = path.join(DOCS_ROOT, filePath);
   if (fs.existsSync(dirPath) && fs.statSync(dirPath).isDirectory()) {
     const files = fs.readdirSync(dirPath);
-    const mdFile = files.find(file => file.endsWith('.md'));
-    if (mdFile) {
-      const fileContent = fs.readFileSync(path.join(dirPath, mdFile), 'utf-8');
+    const mdLikeFile = files.find(file => file.endsWith('.md') || file.endsWith('.mdx'));
+    if (mdLikeFile) {
+      const fileContent = fs.readFileSync(path.join(dirPath, mdLikeFile), 'utf-8');
       const { content, data } = matter(fileContent);
       return { content, data };
     }
@@ -245,9 +363,9 @@ function buildStructure(dirPath: string, relativePath: string = ''): DocItem[] {
     if (stat.isDirectory()) {
       const children = buildStructure(fullPath, itemRelativePath);
       if (children.length > 0) {
-        // Try to get metadata from index.md or README.md
+        // Try to get metadata from index/README (.md or .mdx)
         let metadata: MarkdownContent['data'] = {};
-        const indexFiles = ['index.md', 'README.md'];
+        const indexFiles = ['index.md', 'index.mdx', 'README.md', 'README.mdx'];
         
         for (const indexFile of indexFiles) {
           const indexPath = path.join(fullPath, indexFile);
@@ -272,7 +390,7 @@ function buildStructure(dirPath: string, relativePath: string = ''): DocItem[] {
           children,
           title: metadata.title || formatName(item),
           description: metadata.description,
-          icon: metadata.icon || getDefaultIcon('directory', item, category),
+          icon: resolveIcon(metadata.icon as string | undefined, 'directory', item, category),
           category,
           order: metadata.order || 0,
           badge: metadata.badge,
@@ -280,7 +398,7 @@ function buildStructure(dirPath: string, relativePath: string = ''): DocItem[] {
           externalUrl: metadata.externalUrl
         });
       }
-    } else if (item.endsWith('.md')) {
+    } else if (item.endsWith('.md') || item.endsWith('.mdx')) {
       // Skip certain files that are not meant for documentation
       if (!item.startsWith('prompt.') && !item.startsWith('response.') && !item.includes('.not-good.')) {
         try {
@@ -289,12 +407,12 @@ function buildStructure(dirPath: string, relativePath: string = ''): DocItem[] {
           const category = relativePath.split('/')[0] || 'general';
           
           structure.push({
-            name: item.replace('.md', ''),
+            name: item.replace(/\.(md|mdx)$/i, ''),
             type: 'file',
-            path: itemRelativePath.replace('.md', ''),
-            title: data.title || formatName(item.replace('.md', '')),
+            path: itemRelativePath.replace(/\.(md|mdx)$/i, ''),
+            title: data.title || formatName(item.replace(/\.(md|mdx)$/i, '')),
             description: data.description,
-            icon: data.icon || getDefaultIcon('file', item.replace('.md', ''), category),
+            icon: resolveIcon(data.icon as string | undefined, 'file', item.replace(/\.(md|mdx)$/i, ''), category),
             category,
             order: data.order || 0,
             badge: data.badge,
@@ -306,11 +424,11 @@ function buildStructure(dirPath: string, relativePath: string = ''): DocItem[] {
           // Fallback without metadata
           const category = relativePath.split('/')[0] || 'general';
           structure.push({
-            name: item.replace('.md', ''),
+            name: item.replace(/\.(md|mdx)$/i, ''),
             type: 'file',
-            path: itemRelativePath.replace('.md', ''),
-            title: formatName(item.replace('.md', '')),
-            icon: getDefaultIcon('file', item.replace('.md', ''), category),
+            path: itemRelativePath.replace(/\.(md|mdx)$/i, ''),
+            title: formatName(item.replace(/\.(md|mdx)$/i, '')),
+            icon: getDefaultIcon('file', item.replace(/\.(md|mdx)$/i, ''), category),
             category,
             order: 0
           });
