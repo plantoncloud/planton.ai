@@ -13,7 +13,7 @@ install:
 lint: install
 	$(YARN) lint
 
-build: install
+build: install lint
 	NODE_OPTIONS=--no-deprecation $(YARN) build
 
 # Development server

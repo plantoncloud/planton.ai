@@ -29,9 +29,9 @@ export const CarouselItem: FC<ICarouselItem> = ({ labels }) => {
     }, 2000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [labels.length]);
 
-  const animWidth = useMemo(() => labels[currentIndex]?.width ?? '', [currentIndex]);
+  const animWidth = useMemo(() => labels[currentIndex]?.width ?? '', [currentIndex, labels]);
 
   return (
     <StyledGradientBorderBox2

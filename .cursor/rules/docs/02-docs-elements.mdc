@@ -79,7 +79,7 @@ Follow `@docs-style` IA. Within sections, use these elements as needed:
 ---
 
 ## Callouts (Notes, Tips, Warnings)
-Use blockquotes with a bold lead (aligned with `@docs-style`).
+Preferred: MDX `<Callout type="note|tip|warning" title="...">`.
 
 ```markdown
 > **Note:** This feature requires organization-level permissions.
@@ -88,6 +88,14 @@ Use blockquotes with a bold lead (aligned with `@docs-style`).
 > **Tip:** Use `planton --help` to discover available subcommands.
 
 > **Warning:** Rotating credentials will interrupt currently running jobs.
+
+MDX Callout:
+
+```mdx
+<Callout type="warning" title="Credential rotation">
+Rotating credentials will interrupt currently running jobs.
+</Callout>
+```
 ```
 
 ---
@@ -152,10 +160,25 @@ export SENDGRID_API_KEY="<redacted>"
 
 ---
 
-## Tabs and Collapsible Sections (no MDX)
-We don’t ship MDX components in docs. Use simple patterns:
+## Tabs and Collapsible Sections (MDX + non-MDX)
+Preferred: MDX components are available for tabs and lightweight UI. Fallback patterns also supported.
 
-- Collapsible details:
+- MDX Tabs:
+
+```mdx
+<Tabs>
+  <Tab label="CLI">
+    ```bash
+    planton deploy --env dev
+    ```
+  </Tab>
+  <Tab label="Console">
+    Steps to deploy from the web console.
+  </Tab>
+</Tabs>
+```
+
+- Collapsible details (fallback without MDX):
 
 ```html
 <details>
@@ -174,8 +197,8 @@ kind: Deployment
 
 ---
 
-## Cards and Grids (Markdown-friendly)
-Prefer simple lists for link groups. For a visual grid without MDX, use a table or minimal HTML:
+## Cards and Grids (MDX + Markdown)
+Preferred: MDX components for simple cards and grids. Fallback: lists/tables.
 
 ```markdown
 | Resource | Description |
@@ -198,6 +221,15 @@ Or minimal HTML (works with our renderer):
 ```
 
 Keep HTML minimal; avoid framework-specific classes.
+
+MDX Cards:
+
+```mdx
+<Cards columns={2}>
+  <Card title="CLI Guide">Install and use the CLI</Card>
+  <Card title="Service Hub">Manage services and deployments</Card>
+</Cards>
+```
 
 ---
 

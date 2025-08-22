@@ -20,22 +20,14 @@ order: 0
 
 ## 🚀 Core Pillars
 
-<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginTop: '2rem' }}>
-  <div style={{ padding: '1.5rem', borderRadius: '0.5rem', backgroundColor: '#1f2937' }}>
-    <h3>🏗️ Infra Hub</h3>
-    <p>Declarative Infra Charts and Lego Blocks powered by Pulumi. Spin up production-grade cloud resources in minutes across AWS, Azure, GCP, and DigitalOcean.</p>
-  </div>
-  
-  <div style={{ padding: '1.5rem', borderRadius: '0.5rem', backgroundColor: '#1f2937' }}>
-    <h3>🚢 Service Hub</h3>
-    <p>Vercel-like CI/CD experience for any backend. Push code → Build → Deploy with live log streaming and GitHub OAuth integration.</p>
-  </div>
-  
-  <div style={{ padding: '1.5rem', borderRadius: '0.5rem', backgroundColor: '#1f2937' }}>
-    <h3>📊 Ops Dashboards</h3>
-    <p>Visual graph of every Kubernetes resource with built-in exec capabilities, logs, and essential day-2 operations.</p>
-  </div>
-</div>
+<Cards columns={2}>
+  <Card title="🏗️ Infra Hub">
+    Declarative Infra Charts and Lego Blocks powered by Pulumi. Spin up production‑grade cloud resources in minutes across AWS, Azure, GCP, and DigitalOcean.
+  </Card>
+  <Card title="🚢 Service Hub">
+    Vercel‑like CI/CD experience for any backend. Push code → Build → Deploy with live log streaming and GitHub OAuth integration.
+  </Card>
+</Cards>
 
 ---
 
