@@ -35,6 +35,11 @@ export async function generateStaticParams() {
       if (item.type === 'file') {
         params.push({ slug: [...currentPath, item.name] });
       } else if (item.type === 'directory') {
+        // If directory has an index file, add a path for the directory itself
+        if (item.hasIndex) {
+          params.push({ slug: [...currentPath, item.name] });
+        }
+        // Recursively add paths for children
         addPaths(item.children || [], [...currentPath, item.name]);
       }
     });
