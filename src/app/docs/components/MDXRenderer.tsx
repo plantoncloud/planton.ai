@@ -6,9 +6,6 @@ import { mdxComponents } from './MDXComponents';
 import { Box, Typography, Paper, Divider } from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import rehypeHighlight from 'rehype-highlight';
-import rehypeRaw from 'rehype-raw';
-import 'highlight.js/styles/github-dark.css';
 
 interface MDXRendererProps {
   content: string;
@@ -21,7 +18,6 @@ export const MDXRenderer: FC<MDXRendererProps> = ({ content }) => {
       <Box className="prose prose-invert max-w-none">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
-          rehypePlugins={[rehypeRaw, rehypeHighlight]}
           components={{
             h1: ({ children }) => (
               <Typography variant="h3" className="text-white mb-6 mt-8 first:mt-0">
