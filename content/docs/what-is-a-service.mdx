@@ -1,70 +1,168 @@
 ---
 title: "What is a Service?"
-description: "Understand how Services map your Git repos to pipelines and deployments in PlantonCloud."
+description: "Turn any Git repo (or folder in a monorepo) into a build-and-deploy unit on PlantonCloud."
 icon: guide
 order: 2
 ---
 
 # What is a Service?
 
-## Summary
-A Service connects a Git repository to build and deploy automation on PlantonCloud. You select a repo and branch, define which paths should trigger pipelines, choose who owns the pipeline config (PlantonCloud or your repo), and optionally configure an ingress hostname. From there, commits that match your rules create pipelines that build an image and (optionally) deploy it.
+<Cards columns={3}>
+  <Card title="Connect your repo">
+    Point PlantonCloud at a GitHub/GitLab repository. We create a webhook and watch your default branch (or a branch you choose).
+  </Card>
+  <Card title="Trigger pipelines smartly">
+    Define a project root and optional trigger paths so pipelines run only when relevant files change. Perfect for monorepos.
+  </Card>
+  <Card title="Build → (Optionally) Deploy">
+    Use platform pipelines (Buildpacks or Dockerfile) or your own Tekton pipeline. Enable PR deployments for previews.
+  </Card>
+</Cards>
 
-## Why it matters
-- **Independent units**: Treat each deployable unit (even inside a monorepo) as a separate Service.
-- **Clear ownership**: Decide if pipelines are platform-managed or self-managed in your repo.
-- **Fast feedback**: Use trigger paths to run the right pipelines at the right time.
+<Callout type="tip" title="End‑user perspective">
+  A Service is your deployable unit. It maps a repo (or subfolder) to predictable pipelines and, if enabled, a public/private ingress URL.
+</Callout>
 
-## Core concepts
+## How it works (at a glance)
+1. You connect your Git org and pick a repository.
+2. You set a `project_root` (optional) and configure `trigger_paths` (optional).
+3. You choose who owns pipelines: **Platform** (zero‑config) or **Self‑managed** (Tekton in your repo).
+4. On every matching commit, PlantonCloud runs a pipeline. It builds a container image and can deploy it automatically.
+5. If ingress is enabled, your service is reachable at a hostname under a chosen DNS domain.
 
-### Git repo mapping
-When you create a Service, you connect a repository and confirm the default branch. PlantonCloud records the repo provider, owner, name, default branch, browser/clone URLs, and creates a webhook to receive commit and PR events.
+<Callout type="note" title="Multiple Services per repo">
+  Monorepo? Create one Service per deployable unit by using a different `project_root` (and optional `trigger_paths`) for each.
+</Callout>
 
-- Project root: The directory within the repo that contains your service’s code. Leave empty if your service lives at the repo root.
-- Trigger paths: Optional glob/regex patterns. If any changed file on a commit matches one of these patterns, a pipeline is triggered in addition to the default rule “any change under `project_root/`”. If this list is empty, only changes inside `project_root/` trigger pipelines. To trigger on every commit anywhere, set `"**/*"`.
-- Sparse checkout directories: Optional list of directories to fetch when cloning. Useful for monorepos to keep clones minimal.
+## Map your repository
 
-> Note: Multiple Services can reference the same repo (typical for monorepos) by using different `project_root` and trigger paths.
+<Cards>
+  <Card title="Repository & branch">
+    We store the provider (GitHub/GitLab), owner, repo name, browser/clone URLs, and default branch. A webhook is created so commits and PRs can trigger pipelines.
+  </Card>
+  <Card title="Project root">
+    The directory inside your repo that contains this service. Leave empty if your service lives at the repo root.
+  </Card>
+</Cards>
 
-### Pipeline configuration
-There are two pipeline provider modes:
+### Trigger paths (optional but powerful)
+Use glob/regex patterns so a pipeline runs only when relevant files change. These are evaluated in addition to the default rule “any change under `project_root/` triggers a pipeline.”
 
-- Platform: PlantonCloud owns the pipeline definition. You choose how the image is built:
-  - Buildpacks: Auto-detect language and build using buildpacks.
-  - Dockerfile: Use a `Dockerfile` under your `project_root`.
-- Self: You own the Tekton pipeline manifest in your repo. Point the Service to the directory that contains your pipeline file or rely on the default.
+```yaml
+# Examples
+triggerPaths:
+  - services/payments/**           # all changes under a subservice
+  - infra/**                       # infra-only changes
+  - .github/workflows/**           # when CI config changes
 
-> Tip: For self-managed pipelines, PlantonCloud expects a file named `pipeline.yaml`. If you don’t provide `tekton_pipeline_yaml_directory`, the default location is `.planton/pipeline.yaml` at the repo root.
+# Trigger on every commit anywhere in the repo:
+triggerPaths:
+  - "**/*"
+```
 
-Additional controls:
-- Disable pipelines: No new pipelines are created for this Service.
-- Disable deployments: Build pipelines run, but deployment stages are skipped.
-- Enable pull request deployments: Allow preview environment deployments for PRs.
-- Pipeline branch: Gate pipelines to a single branch (for pushes and PRs). If empty, the default branch applies.
+<Callout type="tip" title="Sparse checkout for monorepos">
+  Speed up clones by fetching only specific directories:
+  
+  ```yaml
+  sparseCheckoutDirectories:
+    - services/payments
+    - libs/common
+  ```
+  
+  This is especially useful when a service references shared code from elsewhere in the repo.
+</Callout>
 
-### Image repository path
-This defines the repository path (without registry host and without tag) where the built image is pushed. The platform composes the full image reference as:
+## Pipelines: choose your ownership
 
-`<registryHost>/<image_repository_path>:<gitCommitSha>`
+<Tabs>
+  <Tab label="Platform-managed">
+    PlantonCloud provides the pipeline so you don’t maintain Tekton files.
 
-- The registry host is injected by the environment (e.g., an ECR or Artifact Registry host).
-- The tag is always the triggering commit SHA.
-- Typical values: `backend-api`, `acmecorp/backend-api`, `github.com/acmecorp/monorepo/services/backend-api`.
+  <ul>
+    <li><strong>Buildpacks</strong>: Auto-detects language and builds without a <code>Dockerfile</code>.</li>
+    <li><strong>Dockerfile</strong>: We build using the <code>Dockerfile</code> under your <code>project_root</code>.</li>
+  </ul>
 
-### Ingress (optional)
-Enable ingress, then select a DNS domain managed by your organization. Deployments will expose your service at a hostname derived from that domain and the target runtime platform.
+  <Callout type="note" title="Good defaults">
+    This path is great when you want fast, consistent builds without maintaining pipeline manifests.
+  </Callout>
+  </Tab>
+  <Tab label="Self-managed (Tekton)">
+    You keep your pipeline in the repo as Tekton YAML. Tell the Service where to find it.
 
-## Onboarding (web console)
-1. Connect your GitHub organization or GitLab group and pick a repository.
-2. Confirm the default branch, set the `project_root` if needed, and optionally configure `trigger_paths` and `sparse_checkout_directories`.
-3. Choose a pipeline provider:
-   - Platform → choose Buildpacks or Dockerfile.
-   - Self → point to the directory that contains `pipeline.yaml`, or rely on the default `.planton/pipeline.yaml`.
-4. Set toggles: disable pipelines, disable deployments, enable PR deployments, and (optionally) set the pipeline branch.
-5. Set the `image_repository_path` (required for builds) and enable ingress if needed.
-6. Save. PlantonCloud creates a webhook and will start pipelines on matching commits.
+  <ul>
+    <li>Put your file at <code>.planton/pipeline.yaml</code> (default), or</li>
+    <li>Set <code>tektonPipelineYamlDirectory</code> to the directory that contains <code>pipeline.yaml</code>.</li>
+  </ul>
 
-## Example: minimal Service spec (YAML)
+```yaml
+pipelineConfiguration:
+  pipelineProvider: self
+  tektonPipelineYamlDirectory: .planton   # looks for .planton/pipeline.yaml
+  params:
+    some-key: some-value
+```
+
+  <Callout type="warning" title="Filename & default">
+    The expected file name is `pipeline.yaml`. If no directory is provided, PlantonCloud looks for `.planton/pipeline.yaml`.
+  </Callout>
+  </Tab>
+</Tabs>
+
+### Deploy toggles
+- **Disable pipelines**: Never create new pipelines (useful during migrations or freezes).
+- **Disable deployments**: Build the image but skip deploy steps.
+- **Enable PR deployments**: Spin up preview environments for pull requests.
+- **Pipeline branch**: Allow pipelines only for a specific branch (applies to pushes and PRs).
+
+## Image repository path (the important one)
+This field tells the platform where to push images (without the registry host and without the tag). The final image is composed as:
+
+```text
+<registryHost>/<image_repository_path>:<gitCommitSha>
+```
+
+- The registry host comes from your environment (e.g., ECR or Artifact Registry).
+- The tag is always the triggering commit SHA for immutability and traceability.
+
+Examples of valid `image_repository_path` values:
+
+```text
+backend-api
+acmecorp/backend-api
+github.com/acmecorp/backend-api
+github.com/acmecorp/monorepo/services/backend-api
+```
+
+<Callout type="tip" title="Do & Don’t">
+  <ul>
+    <li>Do keep it stable across builds of the same service.</li>
+    <li>Do nest paths for clarity in multi-team orgs, e.g., <code>acmecorp/payments/api</code>.</li>
+    <li>Don’t include the registry host or tag; those are added automatically.</li>
+  </ul>
+</Callout>
+
+## Ingress (optional)
+Enable ingress to expose the service via HTTP(S). Choose a DNS domain managed by your org; PlantonCloud provisions the right resources for the target runtime platform.
+
+## Monorepo recipes
+
+<Cards columns={2}>
+  <Card title="One repo → many Services">
+    Create one Service per deployable unit using distinct `project_root` values (and targeted `trigger_paths`).
+  </Card>
+  <Card title="Shared libraries">
+    Use `sparseCheckoutDirectories` to pull both the service and any shared `libs/**` folders it imports.
+  </Card>
+  <Card title="Selective triggers">
+    Combine `project_root` with `trigger_paths` to avoid noisy builds when unrelated areas change.
+  </Card>
+  <Card title="Self-managed pipelines">
+    Keep Tekton in `.planton/pipeline.yaml` per service folder; set `tektonPipelineYamlDirectory` accordingly.
+  </Card>
+</Cards>
+
+## Example Service (YAML)
 ```yaml
 apiVersion: service-hub.planton.cloud/v1
 kind: Service
@@ -85,39 +183,31 @@ spec:
       - services/backend-api/**
     sparseCheckoutDirectories:
       - services/backend-api
+      - libs/common
   pipelineConfiguration:
-    pipelineProvider: platform   # or: self
-    imageBuildMethod: buildpacks # or: dockerfile
+    pipelineProvider: platform      # or: self
+    imageBuildMethod: buildpacks    # or: dockerfile
     imageRepositoryPath: acmecorp/backend-api
-    # For self-managed pipelines, either set tektonPipelineYamlDirectory: .planton
-    # or rely on default file: .planton/pipeline.yaml
-    disablePipelines: false
-    disableDeployments: false
-    enablePullRequestDeployments: false
+    enablePullRequestDeployments: true
     pipelineBranch: main
   ingress:
     enabled: true
     dnsDomainId: dns_01exampleid
 ```
 
-> Note: Field names above mirror the public API schema. Some UI labels may be shortened for clarity.
+## FAQ
+- Can I connect the same repo to multiple Services?
+  - Yes. Use different `project_root` (and optionally different `trigger_paths`).
+- Do I need a `Dockerfile`?
+  - Only if you choose the Dockerfile build method. Buildpacks require no Dockerfile.
+- Where does PlantonCloud look for my self-managed pipeline?
+  - By default at `.planton/pipeline.yaml`. Set `tektonPipelineYamlDirectory` to point to the folder containing `pipeline.yaml` if you keep it elsewhere.
+- How do PR deployments work?
+  - Enable the toggle. PRs to the configured `pipeline_branch` will build and deploy preview environments.
 
-## Troubleshooting
-- Pipelines aren’t triggering:
-  - Confirm the commit changed files under `project_root/` or matched `trigger_paths`.
-  - Ensure `disablePipelines` is false and the commit’s branch matches `pipelineBranch` (or default branch).
-- Dockerfile builds fail:
-  - Verify a `Dockerfile` exists under your `project_root`.
-- Self-managed pipeline not found:
-  - Ensure your repo contains `.planton/pipeline.yaml` (default) or set `tektonPipelineYamlDirectory` to the directory that contains `pipeline.yaml`.
-- Image not found at deploy time:
-  - Check `imageRepositoryPath` and your environment’s registry host configuration.
-
-## See also (source of truth)
-- `planton-cloud/apis/cloud/planton/apis/servicehub/service/v1/spec.proto`
-- `planton-cloud/apis/cloud/planton/apis/servicehub/service/v1/enum.proto`
-- `planton-cloud/backend/services/temporal-worker/src/main/java/cloud/planton/temporalworker/domain/servicehub/pipeline/config/ServicePipelineTektonProperties.java`
-- Example Service YAML: `planton-cloud/ops/planton-cloud/service-hub/services/service-hub.yaml`
-- Getting started: `/docs/getting-started`
-
+## See also
+- Service spec: `planton-cloud/apis/cloud/planton/apis/servicehub/service/v1/spec.proto`
+- Enums: `planton-cloud/apis/cloud/planton/apis/servicehub/service/v1/enum.proto`
+- Default Tekton file location: `backend/services/temporal-worker/.../ServicePipelineTektonProperties.java`
+- Example service YAML: `ops/planton-cloud/service-hub/services/service-hub.yaml`
 

@@ -13,7 +13,8 @@ function Callout({ type = 'note', title, children }: { type?: 'note' | 'tip' | '
           {title}
         </Typography>
       )}
-      <Typography className="text-gray-300">{children}</Typography>
+      {/* Preserve rich children (lists, code, headings) instead of forcing Typography */}
+      <Box className="text-gray-300 leading-relaxed">{children}</Box>
     </Paper>
   );
 }
@@ -22,7 +23,8 @@ function Card({ title, children }: { title?: string; children: ReactNode }) {
   return (
     <Paper className="bg-gray-800 p-4 mb-4 border border-gray-700">
       {title && <Typography className="text-white font-semibold mb-2">{title}</Typography>}
-      <Typography className="text-gray-300">{children}</Typography>
+      {/* Preserve rich children (lists, code, headings) instead of forcing Typography */}
+      <Box className="text-gray-300">{children}</Box>
     </Paper>
   );
 }
