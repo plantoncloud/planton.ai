@@ -69,9 +69,7 @@ export const MarkdownRenderer: FC<MarkdownRendererProps> = ({ content }) => {
           ),
           blockquote: ({ children }) => (
             <Paper className="border-l-4 border-blue-500 bg-gray-800 p-4 mb-4">
-              <Typography className="text-gray-300 italic">
-                {children}
-              </Typography>
+              <Box className="text-gray-300 italic">{children}</Box>
             </Paper>
           ),
           code: ({ children, className }) => {
