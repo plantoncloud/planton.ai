@@ -1,0 +1,86 @@
+---
+title: "Getting Started"
+description: "Your starting point for using Planton Cloud — CLI-first quickstart, sources, and next steps."
+icon: rocket
+order: 1
+---
+
+# Planton Documentation
+
+## Summary
+Welcome — this section helps you get from zero to a working Planton Cloud setup. It’s CLI‑first, concise, and points you directly to the source of truth in this workspace when you want details.
+
+## Prerequisites
+- Node.js 18+ for local web apps (only if you want to run the `planton.ai` site)
+- Git and a recent macOS/Linux shell
+- Planton CLI binary or ability to build it from source
+
+> Note: The CLI is the primary interface to Planton Cloud. Source lives under `planton-cloud/client-apps/cli`. See the domain packages under `planton-cloud/client-apps/cli/cmd/planton/root/domain/*`.
+
+## Steps
+1. Clone the repos you’ll use side‑by‑side.
+
+```bash
+git clone https://github.com/plantoncloud-inc/planton-cloud
+git clone https://github.com/plantoncloud/project-planton
+git clone https://github.com/plantoncloud/planton.ai
+```
+
+2. Get the CLI.
+
+```bash
+# Option A: Use a prebuilt binary from the repo
+ls planton-cloud/client-apps/cli/build
+
+# Option B: Build from source (see targets and Makefile in the CLI folder)
+cd planton-cloud/client-apps/cli
+# Examples: check available commands/targets
+grep -R "cobra.Command" -n cmd/planton | head -n 20 | cat
+```
+
+3. Verify the CLI and set your working context.
+
+```bash
+planton version
+planton context get
+# Example: set org and environment (see flags in cmd/planton/root/context/*.go)
+planton context set --org <your-org> --env <dev|staging|prod>
+```
+
+4. Explore the main domains from the CLI.
+
+- **Infra Hub**: one‑click provisioning orchestration that composes platform APIs with Project Planton legoblocks.
+  - Sources: `planton-cloud/backend/services/infra-hub` and protobufs under `planton-cloud/apis/cloud/planton/**`
+  - Legoblocks: `project-planton/apis/project/planton/provider/<provider>/<legoblock>/`
+
+- **ServiceHub**: build and deploy pipelines for your services (Vercel‑like developer experience).
+  - Sources: `planton-cloud/backend/services/service-hub` and protobufs under `planton-cloud/apis/cloud/planton/**`
+
+## Examples
+```bash
+# Check your CLI version
+planton version
+
+# Inspect current execution context
+planton context get
+
+# Update context (flags available under cmd/planton/root/context)
+planton context set --org acmecorp --env dev
+```
+
+## Troubleshooting
+> Note: If a command isn’t recognized, confirm you’re executing the correct binary for your platform from `planton-cloud/client-apps/cli/build` or that your `$PATH` includes it.
+
+- **Auth or API connectivity issues**: The CLI uses gRPC clients defined under `planton-cloud/client-apps/cli/internal/cli/backend` and related packages. Ensure your credentials and endpoint environment variables are configured.
+- **Provisioning questions**: Cross‑check the exact legoblock under `project-planton/apis/project/planton/provider/...` and the Infra Hub service logic under `backend/services/infra-hub` for accurate parameters and defaults.
+
+## Next steps
+- Explore features and deeper guides in this `/docs` section as they land.
+- Share missing topics or questions and we’ll link to the exact sources here.
+
+## See also
+- `planton-cloud/client-apps/cli` — CLI entrypoint and commands
+- `planton-cloud/backend/services/infra-hub` — provisioning orchestration
+- `planton-cloud/backend/services/service-hub` — build/deploy orchestration
+- `project-planton/apis/project/planton/provider/**` — open‑source legoblocks (APIs/IaC)
+
