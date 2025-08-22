@@ -1,8 +1,14 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getMarkdownContent, getDocumentationStructure, DocItem } from '@/app/docs/utils/fileSystem';
-import {MDXRenderer} from '@/app/docs/components/MDXRenderer';
-import { MarkdownRenderer } from '@/app/docs/components/MarkdownRenderer';
+import {
+  getMarkdownContent,
+  getDocumentationStructure,
+  DocItem,
+} from '@/app/docs/utils/fileSystem';
+import { MDXRenderer } from '@/lib/MDXRenderer';
+import { Author, MDXParser } from '@/lib/mdx';
+import { DocsLayout } from '@/app/docs/components/DocsLayout';
+import matter from 'gray-matter';
 type DocsParams = Promise<{ slug?: string[] }>;
 
 export async function generateMetadata({ params }: { params: DocsParams }): Promise<Metadata> {
@@ -11,11 +17,12 @@ export async function generateMetadata({ params }: { params: DocsParams }): Prom
 
   try {
     const content = await getMarkdownContent(path);
-    const title = content.data?.title || slug[slug.length - 1] || 'Documentation';
+    const { data } = matter(content);
+    const title = data?.title || slug[slug.length - 1] || 'Documentation';
 
     return {
       title: `${title} - Planton Documentation`,
-      description: content.data?.description || 'Planton Cloud Documentation',
+      description: data?.description || 'Planton Cloud Documentation',
     };
   } catch {
     return {
@@ -33,7 +40,7 @@ export async function generateStaticParams() {
   params.push({ slug: [] });
 
   const addPaths = (items: DocItem[], currentPath: string[] = []) => {
-    items.forEach(item => {
+    items.forEach((item) => {
       if (item.type === 'file') {
         params.push({ slug: [...currentPath, item.name] });
       } else if (item.type === 'directory') {
@@ -59,10 +66,12 @@ export default async function DocsPage({ params }: { params: DocsParams }) {
 
   try {
     const content = await getMarkdownContent(path || 'index');
-    return content.isMdx ? (
-      <MDXRenderer content={content.content} />
-    ) : (
-      <MarkdownRenderer content={content.content} />
+    const { data } = matter(content);
+    const mdxContent = MDXParser.reconstructMDX(content);
+    return (
+      <DocsLayout author={data?.author as unknown as Author[]}>
+        <MDXRenderer mdxContent={mdxContent} />
+      </DocsLayout>
     );
   } catch (error) {
     console.error('Error loading documentation:', error);

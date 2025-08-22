@@ -31,7 +31,7 @@ export interface MarkdownContent {
     badge?: string;
     isExternal?: boolean;
     externalUrl?: string;
-    [key: string]: string | number | boolean | undefined;
+    [key: string]: string | string[] | number | boolean | undefined;
   };
   isMdx?: boolean;
 }
@@ -310,7 +310,7 @@ const getDefaultIcon = (type: string, name: string, category?: string): string =
   return type === 'directory' ? '📁' : '📄';
 };
 
-export async function getMarkdownContent(filePath: string): Promise<MarkdownContent> {
+export async function getMarkdownContent(filePath: string): Promise<string> {
   // Try different file extensions and paths (.md and .mdx)
   const possiblePaths = [
     path.join(DOCS_DIRECTORY, `${filePath}.md`),
@@ -323,9 +323,7 @@ export async function getMarkdownContent(filePath: string): Promise<MarkdownCont
 
   for (const candidatePath of possiblePaths) {
     if (fs.existsSync(candidatePath)) {
-      const fileContent = fs.readFileSync(candidatePath, 'utf-8');
-      const { content, data } = matter(fileContent);
-      return { content, data, isMdx: candidatePath.endsWith('.mdx') };
+      return fs.readFileSync(candidatePath, 'utf-8');
     }
   }
 
@@ -335,9 +333,7 @@ export async function getMarkdownContent(filePath: string): Promise<MarkdownCont
     const files = fs.readdirSync(dirPath);
     const mdLikeFile = files.find(file => file.endsWith('.md') || file.endsWith('.mdx'));
     if (mdLikeFile) {
-      const fileContent = fs.readFileSync(path.join(dirPath, mdLikeFile), 'utf-8');
-      const { content, data } = matter(fileContent);
-      return { content, data, isMdx: mdLikeFile.endsWith('.mdx') };
+      return fs.readFileSync(path.join(dirPath, mdLikeFile), 'utf-8');
     }
   }
 

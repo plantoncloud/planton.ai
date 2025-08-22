@@ -24,7 +24,7 @@ interface MDXRendererProps {
   mdxContent: string;
 }
 
-const MDXRenderer: React.FC<MDXRendererProps> = ({ mdxContent }) => {
+export const MDXRenderer: React.FC<MDXRendererProps> = ({ mdxContent }) => {
   const { data, content } = matter(mdxContent);
   const metadata: MdxMetadata = data as MdxMetadata;
 
@@ -39,25 +39,28 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ mdxContent }) => {
             </h1>
           )}
           
-          <div className="flex items-center gap-4 text-gray-300 mb-6">
-            {metadata.date && (
-              <time dateTime={metadata.date}>
-                {formatDate(metadata.date)}
-              </time>
-            )}
-            {metadata.author && (
-              <>
-                <span>•</span>
-                <div className="flex gap-2">
-              {metadata.author.map((author, index) => (
-                <span key={index} className="font-medium">
-                  {author.name}
-                    </span>
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
+          {/* Date and Author */}
+          {(metadata.date || metadata.author) && (
+            <div className="flex items-center gap-4 text-gray-300 mb-6">
+              {metadata.date && (
+                <time dateTime={metadata.date}>
+                  {formatDate(metadata.date)}
+                </time>
+              )}
+              {metadata.author && (
+                <>
+                  {metadata.date && <span>•</span>}
+                  <div className="flex gap-2">
+                    {metadata.author.map((author, index) => (
+                      <span key={index} className="font-medium">
+                        {author.name}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
 
           {/* Tags */}
           {metadata.tags && (
@@ -287,5 +290,3 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ mdxContent }) => {
     </div>
   );
 };
-
-export default MDXRenderer; 

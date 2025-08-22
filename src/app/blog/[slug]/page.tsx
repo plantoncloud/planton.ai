@@ -1,7 +1,7 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { getBlogPostContentBySlug, getAllBlogPosts, MDXParser } from '@/lib/mdx';
-import MDXRenderer from '@/app/components/blog/MDXRenderer';
+import { MDXRenderer } from '@/lib/MDXRenderer';
 import BlogLayout from '@/app/components/blog/BlogLayout';
 
 interface BlogPostPageProps {

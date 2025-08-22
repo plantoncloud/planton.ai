@@ -11,7 +11,7 @@ import {
   Description as FileIcon,
   OpenInNew as ExternalLinkIcon
 } from '@mui/icons-material';
-import { DocItem } from '../utils/fileSystem';
+import { DocItem } from '@/app/docs/utils/fileSystem';
 
 interface DocsSidebarProps {
   onNavigate?: () => void;
