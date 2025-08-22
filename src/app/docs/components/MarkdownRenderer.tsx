@@ -3,8 +3,7 @@
 import { FC } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import rehypeHighlight from 'rehype-highlight';
-import rehypeRaw from 'rehype-raw';
+// Avoid rehype-raw in SSR to reduce hydration drift; no raw HTML in docs
 import { Box, Typography, Paper, Divider } from '@mui/material';
 import 'highlight.js/styles/github-dark.css';
 
@@ -17,7 +16,6 @@ export const MarkdownRenderer: FC<MarkdownRendererProps> = ({ content }) => {
     <Box className="prose prose-invert max-w-none">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw, rehypeHighlight]}
         components={{
           h1: ({ children }) => (
             <Typography variant="h3" className="text-white mb-6 mt-8 first:mt-0">
@@ -71,9 +69,7 @@ export const MarkdownRenderer: FC<MarkdownRendererProps> = ({ content }) => {
           ),
           blockquote: ({ children }) => (
             <Paper className="border-l-4 border-blue-500 bg-gray-800 p-4 mb-4">
-              <Typography className="text-gray-300 italic">
-                {children}
-              </Typography>
+              <Box className="text-gray-300 italic">{children}</Box>
             </Paper>
           ),
           code: ({ children, className }) => {

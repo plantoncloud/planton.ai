@@ -18,6 +18,7 @@ export interface DocItem {
   badge?: string; // For "Popular", "Beta", etc.
   isExternal?: boolean;
   externalUrl?: string;
+  hasIndex?: boolean; // For directories with index files
 }
 
 export interface MarkdownContent {
@@ -33,6 +34,7 @@ export interface MarkdownContent {
     externalUrl?: string;
     [key: string]: string | number | boolean | undefined;
   };
+  isMdx?: boolean;
 }
 
 // Icon mapping for different content types
@@ -324,7 +326,7 @@ export async function getMarkdownContent(filePath: string): Promise<MarkdownCont
     if (fs.existsSync(candidatePath)) {
       const fileContent = fs.readFileSync(candidatePath, 'utf-8');
       const { content, data } = matter(fileContent);
-      return { content, data };
+      return { content, data, isMdx: candidatePath.endsWith('.mdx') };
     }
   }
 
@@ -336,7 +338,7 @@ export async function getMarkdownContent(filePath: string): Promise<MarkdownCont
     if (mdLikeFile) {
       const fileContent = fs.readFileSync(path.join(dirPath, mdLikeFile), 'utf-8');
       const { content, data } = matter(fileContent);
-      return { content, data };
+      return { content, data, isMdx: mdLikeFile.endsWith('.mdx') };
     }
   }
 
@@ -383,6 +385,11 @@ function buildStructure(dirPath: string, relativePath: string = ''): DocItem[] {
 
         const category = relativePath.split('/')[0] || item;
         
+        // Check if this directory has an index file
+        const hasIndex = indexFiles.some(indexFile => 
+          fs.existsSync(path.join(fullPath, indexFile))
+        );
+        
         structure.push({
           name: item,
           type: 'directory',
@@ -395,12 +402,17 @@ function buildStructure(dirPath: string, relativePath: string = ''): DocItem[] {
           order: metadata.order || 0,
           badge: metadata.badge,
           isExternal: metadata.isExternal || false,
-          externalUrl: metadata.externalUrl
+          externalUrl: metadata.externalUrl,
+          hasIndex
         });
       }
     } else if (item.endsWith('.md') || item.endsWith('.mdx')) {
       // Skip certain files that are not meant for documentation
-      if (!item.startsWith('prompt.') && !item.startsWith('response.') && !item.includes('.not-good.')) {
+      // Also skip index.md/mdx and README.md/mdx as they represent directory content
+      if (!item.startsWith('prompt.') && 
+          !item.startsWith('response.') && 
+          !item.includes('.not-good.') &&
+          !['index.md', 'index.mdx', 'README.md', 'README.mdx'].includes(item)) {
         try {
           const fileContent = fs.readFileSync(fullPath, 'utf-8');
           const { data } = matter(fileContent);

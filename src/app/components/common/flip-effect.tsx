@@ -46,7 +46,7 @@ export const FlipEffect: React.FC<FlipEffectProps> = ({
     observer.observe(section);
 
     return () => observer.disconnect();
-  }, []);
+  }, [initialRotation]);
 
   useEffect(() => {
     if (!isVisible) return; // Only track scroll when section is visible
@@ -71,7 +71,7 @@ export const FlipEffect: React.FC<FlipEffectProps> = ({
     handleScroll(); // Run once on mount when visible
 
     return () => window.removeEventListener('scroll', onScroll);
-  }, [isVisible]);
+  }, [isVisible, extraHeight, initialRotation]);
 
   return (
     <Box

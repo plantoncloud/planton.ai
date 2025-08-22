@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { MDXRenderer } from '../components/MDXRenderer';
 import { MarkdownRenderer } from '../components/MarkdownRenderer';
 import { getMarkdownContent, getDocumentationStructure, DocItem } from '../utils/fileSystem';
 
@@ -34,12 +35,19 @@ export async function generateStaticParams() {
       if (item.type === 'file') {
         params.push({ slug: [...currentPath, item.name] });
       } else if (item.type === 'directory') {
+        // If directory has an index file, add a path for the directory itself
+        if (item.hasIndex) {
+          params.push({ slug: [...currentPath, item.name] });
+        }
+        // Recursively add paths for children
         addPaths(item.children || [], [...currentPath, item.name]);
       }
     });
   };
 
   addPaths(structure);
+  // Include root /docs path for static export with catch-all route
+  params.push({ slug: [] });
   return params;
 }
 
@@ -51,7 +59,9 @@ export default async function DocsPage({ params }: { params: DocsParams }) {
   if (slug.length === 0) {
     try {
       const content = await getMarkdownContent('');
-      return (
+      return content.isMdx ? (
+        <MDXRenderer content={content.content} />
+      ) : (
         <MarkdownRenderer content={content.content} />
       );
     } catch (error) {
@@ -63,8 +73,9 @@ export default async function DocsPage({ params }: { params: DocsParams }) {
 
   try {
     const content = await getMarkdownContent(path);
-
-    return (
+    return content.isMdx ? (
+      <MDXRenderer content={content.content} />
+    ) : (
       <MarkdownRenderer content={content.content} />
     );
   } catch (error) {

@@ -1,0 +1,143 @@
+---
+description: Convert transcripts + source code into engaging, source‑backed docs with consistent structure, tone, and examples.
+alwaysApply: false
+---
+
+# Rule: Transcript to Documentation
+
+Purpose: Transform technical transcripts and source code into comprehensive, engaging documentation for Planton Cloud features. Use this when creating documentation for new platform sections based on recorded explanations.
+
+Usage: Invoke explicitly as `@transcript-to-docs` when you have a transcript explaining a feature/concept and need to create full documentation.
+
+Dependencies:
+- `@docs-style` — Style and tone guidelines for docs/blogs
+- `@docs-sources` — Source-of-truth and referencing requirements
+
+## Process Overview
+1. Analyze the transcript: extract key concepts, technical details, narrative flow
+2. Research source code: read protobufs, services, and CLI to validate behavior
+3. Create documentation structure: multiple interconnected pages
+4. Write human-friendly content: translate technical detail into approachable explanations
+
+## Documentation Requirements
+
+### Tone and Style
+- Conversational and direct; write as if explaining to a colleague
+- Developer‑first analogies (e.g., Vercel, Heroku) when useful
+- Action‑oriented: focus on what users can do
+- Balanced voice: approachable, not robotic; avoid pure bullet dumps
+- Examples‑heavy: show, don’t just tell
+
+### Content Structure (by section)
+1) Index page (`feature-name/index.mdx`)
+   - High‑level overview and value proposition
+   - Visual organization of sub‑topics and clear navigation
+   - “Why this matters” section
+
+2) Concept page (`feature-name/what-is-x.mdx`)
+   - Deep dive into the core concept with relatable analogies
+   - Technical details in plain language
+   - Configuration examples and common patterns
+
+3) Getting started (`feature-name/getting-started.mdx`)
+   - 5‑minute quick‑start promise
+   - Step‑by‑step walkthrough
+   - Multi‑language/framework examples
+   - Troubleshooting for common issues
+
+4) Deep dives (e.g., `pipelines.mdx`, `configuration.mdx`)
+   - Advanced features, performance tips, best practices
+
+### Markdown Format
+Use standard Markdown (no React components):
+```markdown
+# Headings with personality
+
+> **Note:** Use blockquotes for callouts
+
+### Use emoji headers sparingly but effectively 🚀
+
+**Bold for emphasis** | **Pipes for compact badges**
+
+- Lists for features
+- Not walls of text
+
+```yaml
+# Realistic, copy‑pastable examples everywhere
+name: real-examples
+```
+```
+
+### Creating Engaging Content
+1. Start with why (why this matters) before what/how
+2. Use analogies (“Think of X like Vercel, but for Y”)
+3. Show progress (“By the end of this guide, you’ll have…”) 
+4. Address pain points (“Previously… now you just…”) 
+5. Celebrate simplicity (“Push code, get deployments.”)
+
+## Implementation Checklist
+- [ ] Extract key concepts and make a concept map
+- [ ] Research implementation in source code:
+  - Backend: `planton-cloud/backend/services/<feature-name>`
+  - APIs: `planton-cloud/apis/cloud/planton/<domain>`
+  - CLI: `planton-cloud/client-apps/cli/cmd/planton/root/<feature>`
+- [ ] Create structure: index → concept → getting‑started → deep‑dives
+- [ ] Write content that:
+  - Uses transcript as foundation
+  - Adds practical examples from source
+  - Includes YAML/code snippets
+  - Provides troubleshooting tips
+- [ ] Ensure navigation works:
+  - Frontmatter (title, description, icon, order)
+  - Directories with `index.mdx` are clickable
+  - No duplicate sidebar entries
+
+## Example Transformation
+From transcript:
+> “A service in PlantonCloud is an API aimed at providing users to bring their git repositories…”
+
+To documentation:
+> Remember the first time you pushed code to Vercel and watched it automatically build and deploy? That magical feeling is what we’re bringing to all your backend services…
+
+## Key Patterns to Follow
+1. Monorepo examples: always include simple + monorepo configs
+2. Visual organization: headers/spacing for scannability
+3. Progressive disclosure: start simple, add complexity
+4. Real configuration: use actual protobuf field names
+5. CLI examples: include real commands
+
+## Anti‑Patterns to Avoid
+- Don’t use React components (Callout, Card, Tabs, etc.)
+- Don’t create walls of dense technical text
+- Don’t assume deep DevOps knowledge
+- Don’t skip “why” to rush to “how”
+- Don’t omit concrete examples
+
+## Source Validation (strict)
+Always ground documentation in actual source:
+- Protobufs for accurate field names
+- Service implementations for behavior
+- CLI code for commands
+- IaC for infrastructure details
+
+Reference pattern:
+```
+Based on: `planton-cloud/backend/services/service-hub/...`
+API: `planton-cloud/apis/cloud/planton/apis/servicehub/service/v1/spec.proto`
+```
+
+## Final Quality Check
+- [ ] Clear to a developer new to the platform?
+- [ ] Enough copy‑pastable examples?
+- [ ] Addresses common pain points?
+- [ ] Friendly but professional tone?
+- [ ] All claims backed by source code?
+
+## Summary
+This rule encapsulates the process used for ServiceHub docs:
+1) Translate transcripts into human‑friendly explanations
+2) Create interconnected pages (index, concept, getting‑started, deep‑dives)
+3) Use a conversational tone with practical examples
+4) Ground everything in source
+5) Use standard Markdown (no React components)
+6) Make complex topics accessible with progressive disclosure
