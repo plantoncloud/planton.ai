@@ -2,8 +2,6 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { MarkdownRenderer } from '../components/MarkdownRenderer';
 import { getMarkdownContent, getDocumentationStructure, DocItem } from '../utils/fileSystem';
-import { Box, Typography, Paper } from '@mui/material';
-import Link from 'next/link';
 
 type DocsParams = Promise<{ slug?: string[] }>;
 

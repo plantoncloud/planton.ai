@@ -18,19 +18,22 @@ References: `@generate-pr-info`, `@README.md`.
 - `gh` installed and authenticated (`gh auth status` succeeds).
 - Current repo has a writable `origin` remote.
 - You have already staged or will stage changes to include in the commit, or skip commit if nothing changed.
+- Code passes lint checks (`make lint` passes) and builds successfully (`make build` passes) to ensure PR won't break on Vercel.
 
 ## High-level flow
-1. Generate PR info via `@generate-pr-info` and capture:
+1. Run `make lint` to ensure code quality. If it fails, stop and report the error.
+2. Run `make build` to ensure code builds successfully. If it fails, stop and report the error.
+3. Generate PR info via `@generate-pr-info` and capture:
    - TITLE: the first fenced `text` block (single line)
    - BODY: the second fenced `markdown` block (multiline)
-2. Derive a branch name from TITLE (heuristics below).
-3. Write the PR body to `.cursor/workspace/pr-description.md` and invoke `tools/local-dev/create_pull_request.py` with:
+4. Derive a branch name from TITLE (heuristics below).
+5. Write the PR body to `.cursor/workspace/pr-description.md` and invoke `tools/local-dev/create_pull_request.py` with:
    - `--title "$TITLE"`
    - `--branch-name "$branch_name"`
    - `--commit-message "$TITLE"`
    - `--body-file "$repo_root/.cursor/workspace/pr-description.md"`
    - Optional flags for draft/reviewers/labels/base branch
-4. Script deterministically handles: create/switch branch, commit if changes, push, create PR, and prints PR URL.
+6. Script deterministically handles: create/switch branch, commit if changes, push, create PR, and prints PR URL.
 
 ## Branch naming heuristic
 - Extract `<type>` (prefix before `(`) and `<scope>` (inside parentheses) from the TITLE when present.
@@ -65,12 +68,28 @@ if ! command -v python3 >/dev/null 2>&1; then
   exit 1
 fi
 
-# 1) Generate PR info via @generate-pr-info (must run this rule first and capture its two code blocks)
+# 1) Run lint to ensure code quality
+echo "Running make lint to check code quality..."
+if ! make lint; then
+  echo "Error: Lint checks failed. Please fix lint issues before creating PR." >&2
+  exit 1
+fi
+echo "Lint checks passed!"
+
+# 2) Run build to ensure code compiles
+echo "Running make build to verify code compiles..."
+if ! make build; then
+  echo "Error: Build failed. Please fix build errors before creating PR." >&2
+  exit 1
+fi
+echo "Build successful!"
+
+# 3) Generate PR info via @generate-pr-info (must run this rule first and capture its two code blocks)
 # EXPECT: variables TITLE and BODY populated from @pr-info output
 : "${TITLE?Missing TITLE from @generate-pr-info}"
 : "${BODY?Missing BODY from @generate-pr-info}"
 
-# 2) Derive branch name from TITLE
+# 4) Derive branch name from TITLE
 _title_no_prefix="$(printf "%s" "$TITLE" | sed -E 's/^[a-z]+(\([^)]*\))?:\s*//')"
 _type="$(printf "%s" "$TITLE" | sed -nE 's/^([a-z]+).*$/\1/p')"
 _scope="$(printf "%s" "$TITLE" | sed -nE 's/^[a-z]+\(([^)]*)\).*/\1/p')"
@@ -79,13 +98,13 @@ _slug="$(printf "%s" "${_title_no_prefix:-change}" | tr '[:upper:]' '[:lower:]' 
 _type_fallback="${_type:-chore}"
 branch_name="${_type_fallback}/${_scope_slug}-${_slug}"
 
-# 3) Prepare PR body file at a stable, ignored path
+# 5) Prepare PR body file at a stable, ignored path
 repo_root="$(git rev-parse --show-toplevel)"
 mkdir -p "$repo_root/.cursor/workspace"
 body_file="$repo_root/.cursor/workspace/pr-description.md"
 printf "%s" "$BODY" > "$body_file"
 
-# 4) Invoke deterministic Python script
+# 6) Invoke deterministic Python script
 extra_flags=()
 [ "${PR_DRAFT:-}" = "1" ] && extra_flags+=("--draft")
 [ -n "${PR_REVIEWERS:-}" ] && extra_flags+=(--reviewers "$PR_REVIEWERS")
@@ -107,6 +126,7 @@ python3 "$repo_root/tools/local-dev/create_pull_request.py" \
 - Base branch override: `PR_BASE_BRANCH=main` (passed as `--base-branch`).
 
 ## Notes
+- This rule runs `make lint` and `make build` separately before creating the PR to ensure code quality and prevent broken builds on Vercel.
 - This rule depends on `@generate-pr-info` to produce high-quality TITLE and BODY.
 - The Python script is idempotent: if the branch exists, it switches to it; if no changes, it skips commit; if upstream exists, it uses it.
 - For enterprise or forks, pass additional `gh` flags via environment or adjust the script if needed (e.g., `--repo`).

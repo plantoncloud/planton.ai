@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getDocumentationStructure } from '../../../docs/utils/fileSystem';
 
+export const dynamic = 'force-static';
+
 export async function GET() {
   try {
     const structure = await getDocumentationStructure();

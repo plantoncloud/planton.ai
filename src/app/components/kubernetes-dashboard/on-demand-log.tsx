@@ -30,13 +30,13 @@ export const OnDemandLog: FC = () => {
             title="Swift Debugging"
             desc="Stay on top of new log entries and spot errors or exceptions fast."
             descClassName="text-text-secondary"
-            className="!bg-[url('')] bg-[#161b22]"
+            className="bg-[#161b22]"
           />
           <InnovationBox
             title="Developer-Friendly"
             desc="No complicated setups; just click and stream logs."
             descClassName="text-text-secondary"
-            className="!bg-[url('')] bg-[#161b22]"
+            className="bg-[#161b22]"
           />
         </Box>
       </Stack>

@@ -1,16 +1,20 @@
 # Makefile for Next.js project
 
 YARN := yarn
+PORT ?= 3000
 
-.PHONY: deps install build run dev devs clean
+.PHONY: deps install lint build run dev devs clean preview-site
 
 deps: install
 
 install:
 	$(YARN) install
 
+lint: install
+	$(YARN) lint
+
 build: install
-	$(YARN) build
+	NODE_OPTIONS=--no-deprecation $(YARN) build
 
 # Development server
 devs: run
@@ -23,3 +27,7 @@ run:
 
 clean:
 	rm -rf .next node_modules .yarn dist out .pnp.cjs .pnp.loader.mjs
+
+# Build and locally preview the static export from ./out
+preview-site: build
+	cd out && npx --yes serve -l $(PORT)
