@@ -32,7 +32,7 @@ export const BgDots: FC<IBgDots> = ({ count = 100, width = 1800 }) => {
     window.addEventListener('resize', updateDimensions);
 
     return () => window.removeEventListener('resize', updateDimensions);
-  }, []);
+  }, [count, width]);
 
   return (
     <Box>

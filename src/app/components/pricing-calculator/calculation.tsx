@@ -82,7 +82,7 @@ const CalcRow: FC<ICalcRow> = ({
   const lastRecord = keyValues.length ? keyValues[keyValues.length - 1] : { key: '', value: '' };
   const records = useMemo(
     () => (toggleCalculation ? keyValues.slice(0, -1) : keyValues),
-    [keyValues]
+    [keyValues, toggleCalculation]
   );
 
   const handleSliderChange: SliderOwnProps['onChange'] = (_, newValue) => {
@@ -176,7 +176,7 @@ const PriceCard: FC<IPriceCard> = ({
 
   const monthlySpend = useMemo(
     () => parseFloat((seatSubTotal + automationRunnerMinutesOverageSubTotal).toFixed(3)),
-    [seatSubTotal, automationRunnerMinutesOverageSubTotal, planType]
+    [seatSubTotal, automationRunnerMinutesOverageSubTotal]
   );
 
   return (

@@ -106,14 +106,36 @@ const SidebarItem: FC<SidebarItemProps> = ({
           className="flex items-center justify-between px-4 py-2 hover:bg-gray-700 cursor-pointer"
           onClick={handleToggle}
         >
-          <Box className="flex items-center gap-2">
+          <Box className="flex items-center gap-2 flex-1">
             {renderIcon()}
-            <Typography className="text-gray-300 text-sm font-medium">
-              {item.title || formatName(item.name)}
-            </Typography>
+            {item.hasIndex ? (
+              <Link 
+                href={`/docs/${item.path}`} 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNavigate();
+                }}
+                className="flex-1"
+              >
+                <Typography className="text-gray-300 text-sm font-medium hover:text-white">
+                  {item.title || formatName(item.name)}
+                </Typography>
+              </Link>
+            ) : (
+              <Typography className="text-gray-300 text-sm font-medium">
+                {item.title || formatName(item.name)}
+              </Typography>
+            )}
             {renderBadge()}
           </Box>
-          <IconButton size="small" className="text-gray-400">
+          <IconButton 
+            size="small" 
+            className="text-gray-400"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleToggle();
+            }}
+          >
             {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </IconButton>
         </Box>

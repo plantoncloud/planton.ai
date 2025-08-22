@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getMarkdownContent, getDocumentationStructure, DocItem } from '@/app/docs/utils/fileSystem';
-import MDXRenderer from '@/app/components/blog/MDXRenderer';
-import { MDXParser } from '@/lib/mdx';
+import {MDXRenderer} from '@/app/docs/components/MDXRenderer';
+import { MarkdownRenderer } from '@/app/docs/components/MarkdownRenderer';
 type DocsParams = Promise<{ slug?: string[] }>;
 
 export async function generateMetadata({ params }: { params: DocsParams }): Promise<Metadata> {
@@ -37,12 +37,19 @@ export async function generateStaticParams() {
       if (item.type === 'file') {
         params.push({ slug: [...currentPath, item.name] });
       } else if (item.type === 'directory') {
+        // If directory has an index file, add a path for the directory itself
+        if (item.hasIndex) {
+          params.push({ slug: [...currentPath, item.name] });
+        }
+        // Recursively add paths for children
         addPaths(item.children || [], [...currentPath, item.name]);
       }
     });
   };
 
   addPaths(structure);
+  // Include root /docs path for static export with catch-all route
+  params.push({ slug: [] });
   return params;
 }
 
@@ -52,9 +59,10 @@ export default async function DocsPage({ params }: { params: DocsParams }) {
 
   try {
     const content = await getMarkdownContent(path || 'index');
-
-    return (
-      <MDXRenderer mdxContent={MDXParser.reconstructMDX(content.content)} />
+    return content.isMdx ? (
+      <MDXRenderer content={content.content} />
+    ) : (
+      <MarkdownRenderer content={content.content} />
     );
   } catch (error) {
     console.error('Error loading documentation:', error);

@@ -1,0 +1,301 @@
+---
+title: "Getting Started with Services"
+description: "Deploy your first application on Planton Cloud in under 5 minutes"
+icon: guide
+order: 20
+---
+
+# Getting Started with Services
+
+## From Zero to Deployed in 5 Minutes
+
+Let's get your first service running on Planton Cloud. By the end of this guide, you'll have:
+- Connected your Git repository
+- Configured automatic builds
+- Deployed your application
+- Got a live URL (optional)
+
+> **Prerequisites**: You'll need a Planton Cloud account and a Git repository (GitHub or GitLab) with some code to deploy.
+
+## Step 1: Connect Your Git Provider
+
+First, let's connect your GitHub or GitLab account so Planton Cloud can access your repositories.
+
+### GitHub
+
+```bash
+# Using the CLI
+planton connect github
+
+# This will:
+# 1. Open your browser for OAuth authorization
+# 2. Request permissions to read repos and create webhooks
+# 3. Store the connection securely
+```
+
+### GitLab
+
+```bash
+# Using the CLI
+planton connect gitlab
+
+# This will:
+# 1. Open your browser for OAuth authorization
+# 2. Request permissions to read repos and create webhooks
+# 3. Store the connection securely
+```
+
+## Step 2: Create Your First Service
+
+Now let's create a Service. We'll use a simple Node.js app as an example, but this works with any language.
+
+### Using the CLI (Recommended)
+
+```bash
+# Interactive service creation
+planton service create
+
+# You'll be prompted for:
+# - Service name: my-api
+# - Repository: Select from your repos
+# - Build method: Choose 'buildpacks' for auto-detection
+# - Enable ingress?: Yes (to get a public URL)
+```
+
+### Using a YAML File
+
+If you prefer declarative configuration:
+
+```yaml
+# service.yaml
+apiVersion: service-hub.planton.cloud/v1
+kind: Service
+metadata:
+  name: my-api
+  org: my-org
+spec:
+  description: My first service on Planton Cloud
+  git_repo:
+    owner_name: myusername
+    name: my-nodejs-api
+    git_repo_provider: github
+  pipeline_configuration:
+    pipeline_provider: platform
+    image_build_method: buildpacks
+    image_repository_path: my-org/my-api
+  ingress:
+    enabled: true
+    dns_domain_id: my-domain-id  # from 'planton dns-domain list'
+```
+
+Then apply it:
+
+```bash
+planton apply -f service.yaml
+```
+
+## Step 3: Watch the Magic Happen
+
+As soon as you create the service, Planton Cloud:
+
+1. **Creates a webhook** on your repository
+2. **Triggers the first pipeline** for your default branch
+3. **Builds your application** (auto-detecting language/framework)
+4. **Creates a container image**
+5. **Deploys to your environment**
+
+Watch the progress:
+
+```bash
+# Follow pipeline logs
+planton service logs my-api --follow
+
+# Check service status
+planton service status my-api
+```
+
+## Step 4: Push Code and See It Deploy
+
+Now for the fun part. Make a change to your code and push:
+
+```bash
+# In your repository
+echo "// Deployed with Planton Cloud!" >> index.js
+git add index.js
+git commit -m "feat: testing auto-deployment"
+git push
+```
+
+Within seconds, you'll see:
+- A new pipeline starting
+- Your code building
+- The new version deploying
+- Your app updated (usually under 5 minutes total)
+
+> **Pro tip**: Keep `planton service logs my-api --follow` running in another terminal to watch deployments in real-time.
+
+## Step 5: Access Your Service
+
+If you enabled ingress, your service is now accessible at:
+
+```
+https://my-api.your-domain.com
+```
+
+Get the exact URL:
+
+```bash
+planton service url my-api
+```
+
+## Common Patterns and Examples
+
+### Node.js Express API
+
+No configuration needed! Just push your code:
+
+```javascript
+// server.js
+const express = require('express');
+const app = express();
+
+app.get('/', (req, res) => {
+  res.json({ message: 'Hello from Planton Cloud!' });
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+```
+
+**Auto-detected as Node.js** | **Port automatically configured**
+
+### Python Flask App
+
+```python
+# app.py
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    return jsonify({"message": "Hello from Planton Cloud!"})
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+```
+
+**Auto-detected as Python** | **Dependencies from requirements.txt**
+
+### Go API
+
+```go
+// main.go
+package main
+
+import (
+    "fmt"
+    "net/http"
+    "os"
+)
+
+func main() {
+    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+        fmt.Fprintf(w, "Hello from Planton Cloud!")
+    })
+    
+    port := os.Getenv("PORT")
+    if port == "" {
+        port = "8080"
+    }
+    
+    http.ListenAndServe(":"+port, nil)
+}
+```
+
+**Auto-detected as Go** | **Efficient multi-stage builds**
+
+## Customizing Your Service
+
+### Using a Dockerfile
+
+If buildpacks don't meet your needs, bring your own Dockerfile:
+
+```yaml
+pipeline_configuration:
+  image_build_method: dockerfile  # Instead of buildpacks
+```
+
+Just make sure you have a `Dockerfile` in your repository root (or project root if configured).
+
+### Monorepo Setup
+
+Have multiple services in one repo? Configure the project root:
+
+```yaml
+git_repo:
+  project_root: backend/api  # Service lives here
+  trigger_paths:
+    - "backend/api/**"      # Only build when these change
+    - "shared/**"           # And these shared libs
+```
+
+### Environment Variables
+
+Add configuration through Secrets Groups:
+
+```bash
+# Create a secrets group
+planton secrets-group create api-secrets
+
+# Add secrets
+planton secrets-group add-secret api-secrets DATABASE_URL="postgres://..."
+planton secrets-group add-secret api-secrets API_KEY="sk-..."
+
+# Attach to your service
+planton service attach-secrets my-api api-secrets
+```
+
+## Troubleshooting Quick Fixes
+
+### Build fails with "no buildpack detected"
+
+Make sure your repository has recognizable files:
+- Node.js: `package.json`
+- Python: `requirements.txt` or `setup.py`
+- Go: `go.mod`
+- Java: `pom.xml` or `build.gradle`
+
+Or switch to Dockerfile-based builds.
+
+### Container crashes immediately
+
+Check that your app listens on the `PORT` environment variable:
+```javascript
+const PORT = process.env.PORT || 3000;  // Always use process.env.PORT
+```
+
+### Webhook not triggering builds
+
+Verify the webhook is active:
+```bash
+planton service webhook-status my-api
+```
+
+Re-create if needed:
+```bash
+planton service recreate-webhook my-api
+```
+
+## What's Next?
+
+Congratulations! You've deployed your first service. Here's what to explore next:
+
+- **[Understanding Pipelines](/docs/service-hub/pipelines)** - See what happens during builds
+- **[Monorepo Guide](/docs/service-hub/monorepo-guide)** - Deploy multiple services from one repo
+- **[Custom Pipelines](/docs/service-hub/custom-pipelines)** - Take control of your build process
+- **[Service Configuration](/docs/service-hub/configuration)** - All configuration options explained
+
+> **You did it!** 🎉 You're now part of the "push code, get deployments" club. Welcome to the future of application delivery.
