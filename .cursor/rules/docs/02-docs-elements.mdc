@@ -1,0 +1,296 @@
+# Rule: Docs Elements and Components (Markdown-first)
+
+Purpose: A single, reusable authoring guide for building engaging documentation pages with images, callouts, cards, checklists, code, and simple interactive patterns — using Markdown plus minimal HTML that works with our current Markdown renderer.
+
+Usage: Invoke as `@docs-elements` alongside `@docs-style` and `@docs-sources` for any new or updated docs/blog content.
+
+Scope: Applies to content under `content/docs/**` and `content/blog/**` in this repo. Designed for our renderer in `src/app/docs/components/MarkdownRenderer.tsx` (ReactMarkdown + GFM + rehype-raw + highlight.js), not full MDX components.
+
+Dependencies:
+- Style & tone: `@docs-style`
+- Source-of-truth: `@docs-sources`
+
+---
+
+## Core Principles
+- Markdown-first. Prefer standard Markdown and GitHub Flavored Markdown (GFM). Use minimal inline HTML only where needed.
+- Skimmable. Short sections, descriptive H2/H3s, bullet lists, and copy-pastable snippets.
+- Visual-first. Each significant concept should include at least one visual (image, diagram, short GIF/video) or a concrete code example.
+- Accessible. Always add descriptive alt text, meaningful link text, and avoid images of text.
+- Local assets only. Store images/videos under `public/images/**` and `public/videos/**` and reference via absolute paths (e.g., `/images/...`).
+
+---
+
+## Page Structure (recommended)
+Follow `@docs-style` IA. Within sections, use these elements as needed:
+
+1) Summary (what the page enables)
+2) Prerequisites
+3) Steps (numbered)
+4) Examples (code + screenshots)
+5) Troubleshooting (common pitfalls)
+6) Next steps / See also
+
+---
+
+## Frontmatter and Naming
+- Filenames: kebab-case. Prefer `index.md` for directory indexes.
+- Include at least `title` and `description` in frontmatter. Use `order` in increments (10, 20, 30...) for sidebar control. See `@docs-style` for full schema.
+
+---
+
+## Images and Figures
+- Place under `/public/images/docs/<topic>/...` when possible; otherwise reuse existing images under `/public/images/**`.
+- Embed with Markdown:
+
+```markdown
+![Short, descriptive alt text](/images/docs/<topic>/screenshot.png)
+```
+
+- For captions or styled frames, use minimal HTML (rehype-raw enabled):
+
+```html
+<figure>
+  <img src="/images/docs/<topic>/screenshot.png" alt="Describe what’s visible and why it matters" />
+  <figcaption>Optional context/caption for the screenshot.</figcaption>
+  <!-- Keep HTML minimal; avoid inline styles when possible. -->
+  <!-- Prefer PNG/SVG for crispness; optimize large PNGs. -->
+  <!-- Consider adding a second crop focusing on the key UI element. -->
+  <!-- Keep width under ~1400px; file size < 1 MB where possible. -->
+  <!-- Never include secrets or PII in screenshots. -->
+  <!-- Blur identifiers if necessary. -->
+</figure>
+```
+
+---
+
+## Videos and GIFs
+- Place short clips under `/public/videos/**` or use GIFs under `/public/images/**`.
+- Embed with HTML `<video>` for MP4 (autoplay disabled by default):
+
+```html
+<video src="/videos/demo.mp4" controls playsinline>
+  Sorry, your browser doesn’t support embedded videos.
+</video>
+```
+
+- Keep clips short (< 20s) and small (< 10 MB) where possible. Always provide context in surrounding text.
+
+---
+
+## Callouts (Notes, Tips, Warnings)
+Use blockquotes with a bold lead (aligned with `@docs-style`).
+
+```markdown
+> **Note:** This feature requires organization-level permissions.
+> Additional context can be placed on the next line.
+
+> **Tip:** Use `planton --help` to discover available subcommands.
+
+> **Warning:** Rotating credentials will interrupt currently running jobs.
+```
+
+---
+
+## Checklists and Steps
+- Use ordered lists for steps and task flows.
+- Use GFM checklists for to-dos.
+
+```markdown
+1. Open the service repository
+2. Add the workflow file
+3. Commit and push to trigger CI
+
+- [ ] Configure credentials
+- [ ] Set environment variables
+- [ ] Validate deployment
+```
+
+---
+
+## Code Blocks and Snippets
+- Always add a language tag for syntax highlighting (highlight.js).
+- Prefer realistic, copy-pastable examples.
+- Use placeholders in angle brackets and document them (e.g., `<org-id>`).
+
+```bash
+# Install
+brew install planton
+
+# Authenticate
+planton auth login --org <org-id>
+
+# Deploy
+planton deploy --env dev
+```
+
+Supported examples: `bash`, `yaml`, `json`, `ts`, `tsx`, `js`, `go`, `java`, `proto`, `hcl`, `dockerfile`, `sql`, `diff`, `text`.
+
+Multi-file or directory trees:
+
+```text
+repo/
+├─ .github/workflows/deploy.yml
+├─ kustomize/
+│  ├─ base/
+│  └─ overlays/prod/
+└─ src/
+```
+
+Diffs:
+
+```diff
+- replicas: 1
++ replicas: 3
+```
+
+Environment variables/secrets (redacted):
+
+```bash
+export SENDGRID_API_KEY="<redacted>"
+```
+
+---
+
+## Tabs and Collapsible Sections (no MDX)
+We don’t ship MDX components in docs. Use simple patterns:
+
+- Collapsible details:
+
+```html
+<details>
+  <summary>Show Kubernetes example</summary>
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+...
+```
+
+</details>
+```
+
+- Language variants: present as adjacent H3s (e.g., “Using CLI”, “Using Console”).
+
+---
+
+## Cards and Grids (Markdown-friendly)
+Prefer simple lists for link groups. For a visual grid without MDX, use a table or minimal HTML:
+
+```markdown
+| Resource | Description |
+|---|---|
+| [CLI Guide](/docs/cli) | Install and use the CLI |
+| [Service Hub](/docs/service-hub) | Manage services and deployments |
+```
+
+Or minimal HTML (works with our renderer):
+
+```html
+<div>
+  <div>
+    <p><strong><a href="/docs/cli">CLI Guide</a></strong><br/>Install and use the CLI</p>
+  </div>
+  <div>
+    <p><strong><a href="/docs/service-hub">Service Hub</a></strong><br/>Manage services and deployments</p>
+  </div>
+</div>
+```
+
+Keep HTML minimal; avoid framework-specific classes.
+
+---
+
+## Diagrams
+- Preferred: export diagrams to PNG/SVG and embed as images with alt text.
+- If Mermaid or GraphViz source is helpful for readers, include it in a fenced code block below the image (for reference), but note it won’t render as a diagram in-page.
+
+```markdown
+![High-level architecture](/images/docs/overview/architecture.svg)
+
+```mermaid
+graph TD;
+  A[Dev] -->|push| B[Pipeline];
+  B --> C[Deploy];
+```
+```
+
+---
+
+## “Visuals” and “Asset Requests” Pattern
+When a flow benefits from design-led visuals, include a short “Visuals” subsection listing suggested screenshots, diagrams, or clips. This mirrors the effective pattern used across `@docs-references` content.
+
+```markdown
+### Visuals
+- Screenshot: Service Hub list with filters applied
+- Diagram: Deploy pipeline from commit to environment
+- Clip (≤15s): Real-time log tail with success state
+```
+
+---
+
+## Links and Cross-References
+- Use relative links for internal docs (e.g., `/docs/service-hub/deployments`).
+- Use precise anchor links for headings when helpful.
+- For code references, mention the path in backticks (e.g., ``planton-cloud/backend/services/service-hub``) and optionally link to GitHub.
+
+---
+
+## Asset Hygiene
+- Optimize images (lossless for SVG, lossless/lossy for PNG/JPG as appropriate).
+- Prefer SVG for UI diagrams; PNG for UI screenshots; GIF/MP4 for micro-interactions.
+- Filenames: kebab-case, meaningful, no spaces.
+- Remove obsolete assets when pages are deleted.
+
+---
+
+## Don’ts
+- Don’t rely on MDX-only components (`<Tabs/>`, `<Card/>`, etc.) — not supported by our docs renderer yet.
+- Don’t embed remote images or videos; keep assets local.
+- Don’t include secrets, tokens, or PII in code, screenshots, or logs.
+- Don’t use marketing superlatives in docs; keep it clear and task-focused (see `@docs-style`).
+
+---
+
+## Pre-Publish Checklist
+- [ ] Style: Page follows `@docs-style` (voice, IA, frontmatter)
+- [ ] Sources: Claims mapped to code/README per `@docs-sources`
+- [ ] Assets: Local, optimized, with alt text and captions as needed
+- [ ] Examples: Copy-pastable and tested
+- [ ] Links: Relative for internal, correct anchors
+- [ ] Skimmability: Headings, lists, visuals; no walls of text
+
+---
+
+## Example Section (ready-to-copy)
+
+```markdown
+## Deploy a service with Kustomize overlays
+
+> **Tip:** Keep `base` minimal and override only what’s required per environment.
+
+1. Create `kustomize/base/` and `kustomize/overlays/dev/` in your repo.
+2. Set shared env via ConfigMaps; inject secrets via your provider’s secrets manager.
+3. Commit and push to trigger CI.
+
+```yaml
+# kustomize/overlays/dev/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payments
+spec:
+  replicas: 1
+```
+
+![Payments deployment overlays](/images/docs/deploy-services/overlays.png)
+
+### Troubleshooting
+> **Note:** If image tag isn’t updated, ensure the workflow passes the commit SHA via CLI flag.
+
+### See also
+- [ConfigMaps for shared variables](/docs/config/configmaps)
+- [CI workflow example](/docs/ci/github-actions)
+```
+
+@README.md
