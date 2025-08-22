@@ -18,6 +18,7 @@ This is the repository for the planton.ai website. It contains:
 - [Advanced setup](#advanced-setup)
 - [Contributing](#contributing)
  - [Cursor rules for docs](#cursor-rules-for-docs)
+ - [Cursor rules for pull requests](#cursor-rules-for-pull-requests)
 
 ## Quick start
 
@@ -113,4 +114,33 @@ How to use (in Cursor Chat):
 
 Why we do this: we want our documentation to be accurate, humble, and useful. That means grounding every page in real code (protobufs, IaC, backend/CLI), and writing in a reader-first tone. The rules above encode that process so contributors can open PRs with confidence.
 
+
+## Cursor rules for pull requests
+
+We also automate PR creation with Cursor rules. These live under:
+
+```
+.cursor/rules/pull-requests/
+  generate-pr-info.mdc  # Ask-only: outputs a title and a Markdown body
+  create-pr.mdc         # Action: creates/switches branch, commits, pushes, opens PR
+```
+
+How it works:
+- `@pr-info` generates exactly two blocks:
+  - First `text` block: Conventional Commit title with planton.ai-aware scope
+    - Scopes: `website/app`, `website/lib`, `website/public`, `website/config`, `docs`, `blog`, `content/workspace`, `.cursor`, `repo`
+  - Second `markdown` block: Description template with Summary/Context/Changes/etc.
+- `@create-pr` uses that output and calls `tools/local-dev/create_pull_request.py` to:
+  - Create or switch to a branch based on title
+  - Commit changes if any are staged
+  - Push the branch and open a PR with GitHub CLI (`gh`)
+
+Quick usage (in Cursor Chat):
+1. Run `@pr-info` to produce title and body
+2. Run `@create-pr` to open the PR non-interactively
+
+Prereqs:
+- `gh` installed and authenticated (`gh auth status`)
+- `python3` installed
+- Writable `origin` remote
 
