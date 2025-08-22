@@ -1,0 +1,282 @@
+---
+title: "What is a Service?"
+description: "Understanding Services in Planton Cloud - your gateway to automated builds and deployments"
+icon: guide
+order: 10
+---
+
+# What is a Service?
+
+## Think of Services Like Your Apps on Vercel, But Better
+
+Remember the first time you pushed code to Vercel and watched it automatically build and deploy? That magical feeling is what we're bringing to all your backend services, microservices, and even monorepos. A Service in Planton Cloud is your bridge between writing code and seeing it run in production—without the DevOps headaches.
+
+> **In a nutshell:** A Service connects your Git repository to Planton Cloud's automated build and deployment pipelines. Push code, get deployments. It's that simple.
+
+## Why Services Matter
+
+Let's be honest—setting up CI/CD pipelines is usually where developer productivity goes to die. You write beautiful code, then spend hours wrestling with YAML files, build configurations, and deployment scripts. Services eliminate that friction.
+
+Here's what makes Services special:
+
+### 🚀 Zero-Config Builds
+Like Vercel's auto-detection, we figure out your language and framework. No Dockerfiles required (unless you want them).
+
+### 🔗 Git-First Workflow
+Connect GitHub or GitLab, and we handle the webhooks. Every commit triggers exactly what should happen.
+
+### 📦 Monorepo-Friendly
+Have 10 services in one repo? No problem. Configure each with its own project root and trigger paths.
+
+### 🎯 Smart Triggers
+Only rebuild when relevant files change. Perfect for large codebases where not every commit affects every service.
+
+## How Services Work
+
+When you create a Service, here's what happens behind the scenes:
+
+1. **You Connect Your Repo**: Point us to your GitHub or GitLab repository
+2. **We Set Up Webhooks**: Automatically configured to notify us of commits
+3. **You Push Code**: Just like you always do
+4. **Magic Happens**: We build your app, create a container image, and deploy it
+5. **You Get a URL**: Your service is live and accessible (if you enabled ingress)
+
+### Simple Example
+
+```yaml
+# A simple Node.js API service
+name: user-api
+git_repo:
+  owner: acmecorp
+  name: user-service
+  default_branch: main
+pipeline_configuration:
+  pipeline_provider: platform  # Let us handle the CI/CD
+  image_build_method: buildpacks  # Auto-detect and build
+  image_repository_path: acmecorp/user-api
+```
+
+### Monorepo Example
+
+```yaml
+# One service from a monorepo
+name: payment-api
+git_repo:
+  owner: acmecorp
+  name: backend-monorepo
+  default_branch: main
+  project_root: services/payment  # This service lives here
+  trigger_paths:
+    - "services/payment/**"      # Only build when payment code changes
+    - "shared/utils/**"          # Or when shared utilities change
+  sparse_checkout_directories:
+    - "services/payment"
+    - "shared/utils"
+    - "shared/protobuf"
+pipeline_configuration:
+  pipeline_provider: platform
+  image_build_method: dockerfile  # Using custom Dockerfile
+  image_repository_path: acmecorp/payment-api
+```
+
+## Pipeline Configuration: Choose Your Adventure
+
+Services offer two distinct approaches to CI/CD, depending on how much control you want:
+
+### Platform-Managed Pipelines (Recommended)
+
+This is the "it just works" option. We handle everything:
+
+**What We Do For You:**
+- ✅ Auto-detect your language and framework
+- ✅ Build optimized container images using [Cloud Native Buildpacks](https://buildpacks.io)
+- ✅ Handle all the pipeline orchestration
+- ✅ Deploy to your configured environments
+
+**Perfect for:** Most services, especially when you want to focus on code, not infrastructure.
+
+### Self-Managed Pipelines
+
+Want full control? Bring your own Tekton pipeline:
+
+```yaml
+pipeline_configuration:
+  pipeline_provider: self
+  tekton_pipeline_yaml_directory: .planton  # Your pipeline lives here
+  params:
+    CUSTOM_BUILD_ARG: "value"
+    DEPLOY_TIMEOUT: "300"
+```
+
+**Perfect for:** Complex build requirements, custom workflows, or when you need specific build tools.
+
+> **Pro tip:** Start with platform-managed pipelines. You can always switch to self-managed later if you need more control.
+
+## Image Build Methods
+
+When using platform-managed pipelines, choose how we build your container images:
+
+### Buildpacks (Auto-Magic)
+
+We automatically detect your language and build an optimized image. No configuration needed!
+
+**Supported out of the box:**
+- Node.js
+- Python
+- Java
+- Go
+- Ruby
+- .NET
+- PHP
+- Rust
+
+### Dockerfile (Full Control)
+
+Bring your own Dockerfile for complete control over the build process.
+
+```dockerfile
+# Place this in your project root (or configure project_root)
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+EXPOSE 3000
+CMD ["node", "server.js"]
+```
+
+> **Note:** The Dockerfile should be in your `project_root` directory. If you haven't set a project root, we look in the repository root.
+
+## Controlling When Pipelines Run
+
+Not every commit needs a deployment. Services give you fine-grained control:
+
+### Pipeline Toggles
+
+```yaml
+pipeline_configuration:
+  disable_pipelines: false  # Set to true to pause all builds
+  disable_deployments: false  # Build images but don't deploy
+  enable_pull_request_deployments: true  # Preview environments!
+```
+
+### Branch Control
+
+```yaml
+pipeline_configuration:
+  pipeline_branch: main  # Only build commits to main
+  # For PRs: only when targeting main + PR deployments enabled
+```
+
+### Smart Path Filtering
+
+For monorepos or when you want selective builds:
+
+```yaml
+git_repo:
+  trigger_paths:
+    - "src/**"           # Any change in src/
+    - "package.json"     # Or package.json changes
+    - "!src/**/*.test.js"  # But not test files
+```
+
+> **Important:** If `trigger_paths` is empty, pipelines only run for changes within `project_root`. To run on ANY change, use `["**/*"]`.
+
+## Making Your Service Accessible
+
+Want your service reachable from the internet? Configure ingress:
+
+```yaml
+ingress:
+  enabled: true
+  dns_domain_id: "your-domain-id"  # From your configured domains
+```
+
+This automatically:
+- Creates the right ingress/load balancer resources
+- Configures SSL/TLS certificates
+- Sets up routing rules
+- Gives you a URL like `your-service.your-domain.com`
+
+## Real-World Patterns
+
+### The Simple API
+
+Just a straightforward REST API that needs to be deployed:
+
+```yaml
+name: user-api
+git_repo:
+  owner: mycompany
+  name: user-api
+pipeline_configuration:
+  pipeline_provider: platform
+  image_build_method: buildpacks
+  image_repository_path: mycompany/user-api
+```
+
+### The Monorepo Service
+
+One of many services in a large repository:
+
+```yaml
+name: checkout-service
+git_repo:
+  owner: mycompany
+  name: ecommerce-platform
+  project_root: services/checkout
+  trigger_paths:
+    - "services/checkout/**"
+    - "libs/shared/**"
+    - "protos/**"
+pipeline_configuration:
+  pipeline_provider: platform
+  image_build_method: dockerfile
+  image_repository_path: mycompany/checkout-service
+```
+
+### The Custom Build
+
+When you need specific build tools or processes:
+
+```yaml
+name: ml-inference-api
+git_repo:
+  owner: mycompany
+  name: ml-services
+  project_root: inference
+pipeline_configuration:
+  pipeline_provider: self
+  tekton_pipeline_yaml_directory: .planton
+  params:
+    GPU_BUILD: "true"
+    MODEL_PATH: "models/latest"
+```
+
+## Common Questions
+
+### Can I use private repositories?
+Yes! When you connect your GitHub or GitLab account, you grant access to your private repos.
+
+### What happens to my existing CI/CD?
+Services work alongside your existing setup. You can gradually migrate or run both in parallel.
+
+### How do I handle secrets?
+Use Secrets Groups to manage environment variables and sensitive configuration. They're injected at runtime.
+
+### Can I deploy to multiple environments?
+Absolutely! Services can be deployed to different environments with environment-specific configuration.
+
+### What about database migrations?
+With self-managed pipelines, you can add migration steps. Or use init containers in your deployment configuration.
+
+## What's Next?
+
+Now that you understand Services, here's where to go next:
+
+- **[Create Your First Service](/docs/service-hub/getting-started)** - Step-by-step guide
+- **[Pipeline Deep Dive](/docs/service-hub/pipelines)** - Understanding the build and deploy process
+- **[Monorepo Strategies](/docs/service-hub/monorepo-guide)** - Best practices for multi-service repositories
+- **[Custom Pipelines](/docs/service-hub/custom-pipelines)** - Writing your own Tekton pipelines
+
+Remember, the goal is to make deployment boring—push code, get results. Services handle the complexity so you can focus on building great software.
