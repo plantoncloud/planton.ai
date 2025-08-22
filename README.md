@@ -1,44 +1,116 @@
-# planton.ai
+<p align="center">
+  <a href='http://makeapullrequest.com'><img alt='PRs Welcome' src='https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=shields'/></a>
+  <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/plantoncloud/planton.ai"/>
+  <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/plantoncloud/planton.ai"/>
+  <img alt="GitHub closed pull requests" src="https://img.shields.io/github/issues-pr-closed/plantoncloud/planton.ai"/>
+</p>
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# planton.ai — Website, docs, and blog
 
-## Getting Started
+This is the repository for the planton.ai website. It contains:
 
-First, run the development server:
+- All written content and visuals for the public website: product pages, docs, blog, case studies, tutorials, and marketing pages
+- File system–based content for docs and blog (Markdown/MDX) alongside the components, templates, and logic used to render them
+- All the components, styling, and configurations used to run the site as an application
+
+## Table of contents
+- [Quick start](#quick-start)
+- [Advanced setup](#advanced-setup)
+- [Contributing](#contributing)
+ - [Cursor rules for docs](#cursor-rules-for-docs)
+
+## Quick start
+
+1. **Pre-installation**
+
+    Install Node.js (≥ 18). If you use `nvm`, run `nvm use` in the repo to switch to the recommended version. Enable Yarn (Berry) via Corepack.
+
+    ```bash
+    node -v   # should be >= 18
+    corepack enable  # enables Yarn 4 from packageManager field
+    ```
+
+2.  **Start developing**
+
+    Clone the repo and navigate into the directory:
+
+    ```bash
+    git clone git@github.com:plantoncloud/planton.ai.git && cd planton.ai
+    ```
+
+    Install dependencies and start the dev server (Next.js):
+
+    ```bash
+    yarn
+    yarn dev
+    ```
+
+    Your site is now running at `http://localhost:3000`.
+
+3.  **Open the source code and start editing!**
+
+    Content lives under `content/` and app code under `src/`. Changes in most files hot-reload automatically.
+
+## Advanced setup
+
+### Scripts
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Lint
+yarn lint
+
+# Build for production
+yarn build
+
+# Start production server (after build)
+yarn start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Content model
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Docs: Markdown files under `content/docs/**`
+- Blog: MD/MDX under `content/blog/**`
+- Static assets: `public/`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The app uses file system–based routing and content rendering. To add a new page:
+1) Create a Markdown/MDX file under `content/docs` or `content/blog`
+2) Include frontmatter (e.g., `title`, `description` for docs; `title`, `date`, `author`, `tags` for blog)
+3) Run `yarn dev` and navigate to the route
 
-## Learn More
+### Project structure
 
-To learn more about Next.js, take a look at the following resources:
+- `src/app/docs/**`: Docs routes and components
+- `src/app/blog/**`: Blog routes and components
+- `src/app/components/**`: Shared UI components
+- `src/lib/**`: Utilities for parsing/reading content
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+We <3 contributions big and small. In priority order (although everything is appreciated):
 
-## Deploy on Vercel
+- Open a PR
+  - Follow the [Quick start](#quick-start) to run the site locally
+  - For basic content edits, navigate to the file in GitHub and click the edit icon (pencil)
+- Open an issue for bugs or content ideas: `https://github.com/plantoncloud/planton.ai/issues/new`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Guidelines:
+- Keep content changes focused and include a brief summary in the PR description
+- For docs/blog posts, prefer copy-pastable examples and reference exact file paths or commands where possible
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Cursor rules for docs
 
-retrigger
-..
-..
-..
-..
+We use Cursor as a native part of our workflow for writing docs and blog posts. To make this transparent and repeatable, we maintain rule files under:
+
+```
+.cursor/rules/docs/
+  00-docs-style.mdc     # Style and tone guide for docs/blogs
+  01-docs-sources.mdc   # Source-of-truth and referencing guide
+```
+
+How to use (in Cursor Chat):
+- `@docs-style`: Apply the docs/blog style and tone (voice, IA, frontmatter templates)
+- `@docs-sources`: Ground content in source code across repos (Project Planton legoblocks, Planton Cloud APIs and services, CLI-first flows)
+
+Why we do this: we want our documentation to be accurate, humble, and useful. That means grounding every page in real code (protobufs, IaC, backend/CLI), and writing in a reader-first tone. The rules above encode that process so contributors can open PRs with confidence.
+
+
