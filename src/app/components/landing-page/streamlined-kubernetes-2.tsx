@@ -6,7 +6,7 @@ import { InnovationBox } from '@/app/components/solutions';
 
 export const StreamlinedKubernetes2: FC = () => {
   return (
-    <Stack className="items-center bg-[linear-gradient(180deg,_#1A1F3C_-23.75%,_#000000_45.19%)] md:bg-[url('')] md:bg-black p-5 md:p-0 md:pt-56 md:pb-12 relative overflow-hidden">
+    <Stack className="items-center bg-[linear-gradient(180deg,_#1A1F3C_-23.75%,_#000000_45.19%)] md:bg-black p-5 md:p-0 md:pt-56 md:pb-12 relative overflow-hidden">
       <Box className="hidden md:block w-[1770px] aspect-square absolute top-0 left-1/2 transform -translate-x-[90%] -translate-y-[78%] rounded-full blur-[250px] bg-[linear-gradient(195deg,_rgba(107,_86,_162,_0.24)_-31.13%,_rgba(35,_13,_166,_0.24)_179.29%)]" />
       <Box className="hidden md:block w-[1160px] aspect-square z-0 absolute top-[21%] rounded-full blur-[200px] bg-[linear-gradient(216deg,_rgba(70,_170,_165,_0.58)_-1.74%,_rgba(107,_86,_162,_0.58)_53.46%,_rgba(35,_13,_166,_0.58)_117.61%)]" />
       <Box className="hidden md:block w-[1700px] aspect-square z-20 absolute top-[50%] rounded-full blur-[200px] bg-[linear-gradient(196deg,_rgba(107,_86,_162,_0.24)_-31.13%,_rgba(35,_13,_166,_0.24)_179.29%)]" />

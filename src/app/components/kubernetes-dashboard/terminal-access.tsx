@@ -34,13 +34,13 @@ export const TerminalAccess: FC = () => {
             title="Quick Diagnostics"
             desc="Run common commands (ls, env, cat logs, etc.) to verify file structures, environment variables, or configurations."
             descClassName="text-text-secondary"
-            className="!bg-[url('')] bg-[#161b22]"
+            className="bg-[#161b22]"
           />
           <InnovationBox
             title="No Extra Tooling"
             desc="No need for kubectl installed locally or cluster credentials—PlantonCloud handles it seamlessly."
             descClassName="text-text-secondary"
-            className="!bg-[url('')] bg-[#161b22]"
+            className="bg-[#161b22]"
           />
         </Box>
       </Stack>

@@ -23,31 +23,31 @@ export const HowItAllWorks: FC = () => {
             title="Inspect & Edit"
             desc="Need to update a config map or add a port? Switch to YAML view, make your edits, and click Save."
             descClassName="text-text-secondary"
-            className="col-span-12 md:col-span-6 !bg-[url('')] bg-[#161b22]"
+            className="col-span-12 md:col-span-6 bg-[#161b22]"
           />
           <InnovationBox
             title="Debug on the Fly"
             desc="Check logs, describe resources, or even open a terminal session inside a running pod to investigate issues."
             descClassName="text-text-secondary"
-            className="col-span-12 md:col-span-6 !bg-[url('')] bg-[#161b22]"
+            className="col-span-12 md:col-span-6 bg-[#161b22]"
           />
           <InnovationBox
             title="Single Click Access"
             desc="From your Resource Explorer, click the Kubernetes icon to open the dashboard for a specific resource."
             descClassName="text-text-secondary"
-            className="col-span-12 md:col-span-6 !bg-[url('')] bg-[#161b22]"
+            className="col-span-12 md:col-span-6 bg-[#161b22]"
           />
           <InnovationBox
             title="View All Related Objects"
             desc="Instantly see everything that’s actually deployed on your Kubernetes cluster for that application (or microservice)."
             descClassName="text-text-secondary"
-            className="col-span-12 md:col-span-6 !bg-[url('')] bg-[#161b22]"
+            className="col-span-12 md:col-span-6 bg-[#161b22]"
           />
           <InnovationBox
             title="Control Access with Ease"
             desc="Provide developers, QA, or DevOps the level of access they need—read-only or full edit—without manually juggling cluster credentials."
             descClassName="text-text-secondary"
-            className="col-span-12 !bg-[url('')] bg-[#161b22]"
+            className="col-span-12 bg-[#161b22]"
           />
         </Box>
       </Stack>

@@ -16,13 +16,13 @@ export const ConfigurationAndDebugging: FC = () => {
             title="Editable YAML"
             desc="Tweak ports, environment variables, or labels in seconds."
             descClassName="text-text-secondary"
-            className="!bg-[url('')] bg-[#161B22]"
+            className="bg-[#161B22]"
           />
           <InnovationBox
             title="Quick Diagnosis"
             desc="Spot pending pods or resource issues without juggling command-line tools."
             descClassName="text-text-secondary"
-            className="!bg-[url('')] bg-[#161B22]"
+            className="bg-[#161B22]"
           />
         </Box>
         <img src="/images/landing-page/bg-9-small.svg" className="md:hidden w-full" />
@@ -36,13 +36,13 @@ export const ConfigurationAndDebugging: FC = () => {
             title="Live Debugging"
             desc="Watch logs as they update, catch errors instantly."
             descClassName="text-text-secondary"
-            className="!bg-[url('')] bg-[#161B22]"
+            className="bg-[#161B22]"
           />
           <InnovationBox
             title="Shell in a Click"
             desc="Execute commands or inspect files inside a container—no separate tools needed."
             descClassName="text-text-secondary"
-            className="!bg-[url('')] bg-[#161B22]"
+            className="bg-[#161B22]"
           />
         </Box>
       </Stack>

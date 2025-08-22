@@ -32,25 +32,25 @@ export const KeyBenefits: FC = () => {
             title="Accelerated Debugging & Collaboration"
             desc="Empower developers to view logs and troubleshoot issues instantly, eliminating the need to route every request through DevOps."
             descClassName="text-text-secondary"
-            className="!bg-[url('')] bg-[#161b22]"
+            className="bg-[#161b22]"
           />
           <InnovationBox
             title="Centralized Access Control"
             desc="Grant fine-grained “read” or “edit” access to specific team members, resources, or environments—right within PlantonCloud"
             descClassName="text-text-secondary"
-            className="!bg-[url('')] bg-[#161b22]"
+            className="bg-[#161b22]"
           />
           <InnovationBox
             title="Real-Time Cluster Insights"
             desc="Get an at-a-glance view of all the Kubernetes objects tied to your application or microservice, including pods, services, and more"
             descClassName="text-text-secondary"
-            className="!bg-[url('')] bg-[#161b22]"
+            className="bg-[#161b22]"
           />
           <InnovationBox
             title="Single Source of Truth"
             desc="All your Kubernetes configurations, logs, and resource statuses are accessible through one platform. No context-switching required."
             descClassName="text-text-secondary"
-            className="!bg-[url('')] bg-[#161b22]"
+            className="bg-[#161b22]"
           />
         </Box>
         <TypoH2 className="text-center mt-10 md:mt-64 md:max-w-[1000px]">

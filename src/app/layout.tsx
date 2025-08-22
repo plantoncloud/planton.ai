@@ -4,7 +4,6 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import { Layout } from "./components/layout/MainLayout";
 import { ThemeProvider } from "./providers/theme";
-import { headers } from "next/headers";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 const geistSans = Geist({
@@ -28,22 +27,14 @@ export const metadata: Metadata = {
   description: "Planton Cloud",
 };
 
-async function isLocalhost() {
-  const headersList = await headers();
-  const hostname = headersList.get('host');
-  return hostname ? hostname.includes('localhost') || hostname.includes('127.0.0.1') : false;
-}
-
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const localhost = await isLocalhost()
-
   return (
     <html lang="en" className="h-screen">
-      {!localhost && <GoogleAnalytics gaId="G-VWZNWQPEJ0" />}
+      {process.env.NODE_ENV === 'production' && <GoogleAnalytics gaId="G-VWZNWQPEJ0" />}
 
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />

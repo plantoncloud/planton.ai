@@ -20,13 +20,13 @@ export const InDepthYAML: FC = () => {
               title="YAML View"
               desc="Inspect the raw YAML configuration that Kubernetes uses, and even edit it right from your browser."
               descClassName="text-text-secondary"
-              className="!bg-[url('')] bg-[#161b22]"
+              className="bg-[#161b22]"
             />
             <InnovationBox
               title="Describe View"
               desc="Quickly see the typical Kubernetes “describe” output for more insights into resource status and events."
               descClassName="text-text-secondary"
-              className="!bg-[url('')] bg-[#161b22]"
+              className="bg-[#161b22]"
             />
           </Box>
           <img
