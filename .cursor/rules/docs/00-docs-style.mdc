@@ -1,0 +1,170 @@
+---
+description: Style and tone guide for Planton.ai docs and blogs inspired by PostHog docs. Use for all content under content/docs and content/blog.
+alwaysApply: false
+---
+
+# Rule: Docs and Blog Style (PostHog-inspired)
+
+Purpose: Ensure all documentation and blog content for PlantonCloud follows a consistent, pragmatic, and reader-first style inspired by the tone and information architecture on posthog.com/docs.
+
+Usage: Invoke explicitly as `@docs-style` when drafting or editing any page under `content/docs/**` or `content/blog/**` in this repository.
+
+Scope: Applies to documentation pages (Markdown in `content/docs`) and blog posts (MD/MDX in `content/blog`).
+
+## Voice and Tone
+- Conversational, direct, and helpful. Write to the reader as “you”.
+- Focus on outcomes and clarity over marketing. Keep introductions short; prioritize getting users unblocked.
+- Prefer active voice, present tense, and short sentences. Avoid filler and jargon.
+- Use US English and consistent terminology for PlantonCloud concepts.
+
+## Information Architecture (mirror PostHog-style structure)
+For each docs page:
+- Start with a concise one-paragraph "What you’ll learn"/Summary.
+- Then cover: "Prerequisites" → "Steps" → "Examples" → "Troubleshooting" → "Next steps" → "See also".
+- Keep headings skimmable (H2/H3 only as needed). One concept per page when possible.
+
+For each blog post:
+- Lead with the core idea and key takeaway in the first 2–3 sentences.
+- Use sections with descriptive H2s, short paragraphs, and code snippets where relevant.
+
+## Markdown Conventions
+- Use fenced code blocks with language tags (bash, yaml, json, ts, go, etc.).
+- Inline code with backticks for commands, file names, and identifiers.
+- Use lists for procedures and checklists; avoid long, dense paragraphs.
+- Callouts: prefer blockquotes (>) with a bold lead (e.g., “Note:”) rather than custom admonitions.
+- Link precisely: relative links within docs, absolute links for external resources.
+
+## Docs Frontmatter (content/docs)
+These fields power the dynamic sidebar, ordering, and metadata. Include at minimum `title` and `description`.
+
+Required (recommended):
+- `title`: Page or section title.
+- `description`: 1–2 sentences for previews and SEO.
+
+Optional:
+- `icon`: One of: guide, tutorial, api, sdk, integration, migration, deployment, monitoring, security, performance, analytics, experiment, feature, survey, error, session, replay, pipeline, warehouse, ai, llm, product, web, mobile, desktop, cloud, self-host, migrate, reverse-proxy, billing, privacy, contribute, support, changelog, roadmap, blog, careers, investors, press, faq, status, soc2, hipaa, gdpr, ccpa, terms, policy.
+- `order`: Number for ordering within a folder (lower first).
+- `badge`: Optional short label (e.g., "Beta").
+- `isExternal`: true/false to mark links that point outside the site.
+- `externalUrl`: URL if `isExternal` is true.
+- `category`: Optional; inferred from path if omitted.
+
+Example (page):
+```markdown
+---
+title: "Deploy PlantonCloud on Kubernetes"
+description: "Install PlantonCloud on an existing cluster with Helm."
+icon: deployment
+order: 20
+badge: "Beta"
+---
+
+# Deploy PlantonCloud on Kubernetes
+
+...content...
+```
+
+Example (folder index):
+```markdown
+---
+title: "PlantonCloud CLI"
+description: "Reference and guides for the CLI."
+icon: code
+order: 10
+---
+
+# PlantonCloud CLI
+
+This section contains CLI guides and references.
+```
+
+Directory conventions:
+- Each section folder may include an `index.md` or `README.md` to set metadata for the folder.
+- Pages inside a section use `order` to control appearance in the sidebar. Keep numbers sparse (10, 20, 30...).
+
+## Docs Page Template
+Use this skeleton for new docs pages.
+
+```markdown
+---
+title: "<Actionable title>"
+description: "<1–2 sentence summary>"
+icon: guide
+order: 10
+---
+
+# <Actionable title>
+
+## Summary
+One paragraph on what this page helps you accomplish.
+
+## Prerequisites
+- <Requirement 1>
+- <Requirement 2>
+
+## Steps
+1. <Step 1>
+2. <Step 2>
+
+## Examples
+```bash
+# Example command
+planton <command>
+```
+
+## Troubleshooting
+> Note: Common pitfalls and fixes.
+
+## Next steps
+- Link to deeper guides or related features.
+
+## See also
+- Related docs pages
+```
+
+## Blog Frontmatter (content/blog)
+Blog posts support MD or MDX. Include at least `title`, `date`, `author`, and `tags`.
+
+Required:
+- `title`: Post title
+- `date`: ISO or YYYY-MM-DD
+- `author`: Array of objects with `name` and `title` (optionally bio/socials)
+- `tags`: Array of strings
+
+Optional:
+- `excerpt`: 1–2 sentence preview
+- `featuredImage`, `featuredImageType`, `featuredVideo`
+
+Example:
+```markdown
+---
+title: "Shipping faster with PlantonCloud"
+date: 2025-08-22
+author:
+  - name: Jane Doe
+    title: Developer Advocate
+tags:
+  - product
+  - developer-experience
+excerpt: "How we streamline app delivery with IaC + CI/CD."
+featuredImage: "/images/blog/shipping-faster.png"
+---
+
+Intro paragraph with the key takeaway.
+```
+
+## Writing Guidelines (checklist)
+- Start with why this matters and what the reader will achieve.
+- Put the most important information first; defer background.
+- Use precise headings; every section should have a clear purpose.
+- Prefer copy-pastable commands and complete examples.
+- Include links to next steps and related docs at the end.
+- Keep paragraphs short (≤ 3 sentences where possible).
+- Validate steps against the current UI/CLI.
+
+## When in Doubt
+- Default to clarity over completeness; link to deeper references.
+- If a concept spans multiple concerns, split into separate pages.
+
+@README.md
+
