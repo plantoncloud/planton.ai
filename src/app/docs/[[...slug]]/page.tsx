@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { MDXRenderer } from '../components/MDXRenderer';
+import { MarkdownRenderer } from '../components/MarkdownRenderer';
 import { getMarkdownContent, getDocumentationStructure, DocItem } from '../utils/fileSystem';
 
 type DocsParams = Promise<{ slug?: string[] }>;
@@ -53,8 +54,11 @@ export default async function DocsPage({ params }: { params: DocsParams }) {
   if (slug.length === 0) {
     try {
       const content = await getMarkdownContent('');
-      // Avoid mismatches by not injecting inline style objects via MD content
-      return (<MDXRenderer content={content.content} />);
+      return content.isMdx ? (
+        <MDXRenderer content={content.content} />
+      ) : (
+        <MarkdownRenderer content={content.content} />
+      );
     } catch (error) {
       console.error('Error loading root documentation index:', error);
       // Fallback to notFound to show the 404 UI if index is missing
@@ -64,8 +68,11 @@ export default async function DocsPage({ params }: { params: DocsParams }) {
 
   try {
     const content = await getMarkdownContent(path);
-
-    return (<MDXRenderer content={content.content} />);
+    return content.isMdx ? (
+      <MDXRenderer content={content.content} />
+    ) : (
+      <MarkdownRenderer content={content.content} />
+    );
   } catch (error) {
     console.error('Error loading documentation:', error);
     notFound();

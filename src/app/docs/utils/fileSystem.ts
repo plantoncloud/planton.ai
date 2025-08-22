@@ -33,6 +33,7 @@ export interface MarkdownContent {
     externalUrl?: string;
     [key: string]: string | number | boolean | undefined;
   };
+  isMdx?: boolean;
 }
 
 // Icon mapping for different content types
@@ -324,7 +325,7 @@ export async function getMarkdownContent(filePath: string): Promise<MarkdownCont
     if (fs.existsSync(candidatePath)) {
       const fileContent = fs.readFileSync(candidatePath, 'utf-8');
       const { content, data } = matter(fileContent);
-      return { content, data };
+      return { content, data, isMdx: candidatePath.endsWith('.mdx') };
     }
   }
 
@@ -336,7 +337,7 @@ export async function getMarkdownContent(filePath: string): Promise<MarkdownCont
     if (mdLikeFile) {
       const fileContent = fs.readFileSync(path.join(dirPath, mdLikeFile), 'utf-8');
       const { content, data } = matter(fileContent);
-      return { content, data };
+      return { content, data, isMdx: mdLikeFile.endsWith('.mdx') };
     }
   }
 

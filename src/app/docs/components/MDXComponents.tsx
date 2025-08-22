@@ -4,7 +4,7 @@ import { MDXComponents } from 'mdx/types';
 import { Box, Paper, Tabs as MuiTabs, Tab as MuiTab, Typography, Divider } from '@mui/material';
 import React, { ReactNode, useState } from 'react';
 
-function Callout({ type = 'note', title, children }: { type?: 'note' | 'tip' | 'warning'; title?: string; children: ReactNode }) {
+export function Callout({ type = 'note', title, children }: { type?: 'note' | 'tip' | 'warning'; title?: string; children: ReactNode }) {
   const border = type === 'warning' ? 'border-red-500' : type === 'tip' ? 'border-green-500' : 'border-blue-500';
   return (
     <Paper className={`border-l-4 ${border} bg-gray-800 p-4 mb-4`}>
@@ -19,7 +19,7 @@ function Callout({ type = 'note', title, children }: { type?: 'note' | 'tip' | '
   );
 }
 
-function Card({ title, children }: { title?: string; children: ReactNode }) {
+export function Card({ title, children }: { title?: string; children: ReactNode }) {
   return (
     <Paper className="bg-gray-800 p-4 mb-4 border border-gray-700">
       {title && <Typography className="text-white font-semibold mb-2">{title}</Typography>}
@@ -29,12 +29,12 @@ function Card({ title, children }: { title?: string; children: ReactNode }) {
   );
 }
 
-function Cards({ columns = 2, children }: { columns?: 1 | 2 | 3 | 4; children: ReactNode }) {
+export function Cards({ columns = 2, children }: { columns?: 1 | 2 | 3 | 4; children: ReactNode }) {
   const gridCols = columns === 4 ? 'grid-cols-4' : columns === 3 ? 'grid-cols-3' : columns === 1 ? 'grid-cols-1' : 'grid-cols-2';
   return <Box className={`grid ${gridCols} gap-4 mb-4`}>{children}</Box>;
 }
 
-function Tabs({ defaultValue = 0, children }: { defaultValue?: number; children: ReactNode }) {
+export function Tabs({ defaultValue = 0, children }: { defaultValue?: number; children: ReactNode }) {
   const [value, setValue] = useState(defaultValue);
   const tabs: ReactNode[] = [];
   const panels: ReactNode[] = [];
@@ -62,7 +62,7 @@ function Tabs({ defaultValue = 0, children }: { defaultValue?: number; children:
   );
 }
 
-function Tab({ label: _label, children }: { label: string; children: ReactNode }) {
+export function Tab({ label: _label, children }: { label: string; children: ReactNode }) {
   return <>{children}</>;
 }
 
