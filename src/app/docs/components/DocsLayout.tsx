@@ -5,7 +5,7 @@ import RightSidebar from '@/app/docs/components/RightSidebar';
 import { Author } from '@/lib/mdx';
 import { IconButton, Typography } from '@mui/material';
 import { Stack } from '@mui/material';
-import { DocsSidebar } from '@/app/docs/components/LeftSidebar';
+import { DocsSidebar } from '@/app/docs/components/DocsSidebar';
 import { SearchBar } from '@/app/docs/components/SearchBar';
 import { Drawer } from '@mui/material';
 import { Menu as MenuIcon, Close as CloseIcon } from '@mui/icons-material';
