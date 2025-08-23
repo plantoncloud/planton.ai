@@ -5,8 +5,6 @@ icon: pipeline
 order: 30
 ---
 
-# Understanding Pipelines
-
 ## Your Code's Journey from Commit to Cloud
 
 Every time you push code, a Pipeline springs to life. It's the automated workflow that transforms your source code into a running application. Think of it as your personal deployment assistant that never sleeps, never makes mistakes, and always follows the same reliable process.
@@ -26,7 +24,7 @@ graph LR
     E --> F[Push to Registry]
     F --> G[Deploy to Environment]
     G --> H[Health Check]
-    
+
     style C fill:#4CAF50,stroke:#333,stroke-width:2px
     style E fill:#2196F3,stroke:#333,stroke-width:2px
     style G fill:#FF9800,stroke:#333,stroke-width:2px
@@ -241,7 +239,7 @@ Run different pipelines based on conditions:
 - task: deploy-production
   when:
     branch: main
-    
+
 # Run integration tests only for API changes
 - task: integration-tests
   when:
@@ -343,7 +341,7 @@ planton pipeline rerun <pipeline-id> --debug
 ### 2. Secure Your Pipelines
 
 - **Never hardcode secrets** - use Secrets Manager
-- **Pin dependency versions** for reproducibility  
+- **Pin dependency versions** for reproducibility
 - **Scan images** for vulnerabilities (automatic)
 - **Use least-privilege** service accounts
 

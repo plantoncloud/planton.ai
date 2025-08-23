@@ -7,7 +7,7 @@ import { colors } from "./colors";
 const { primaryLight } = colors;
 
 const workSans = Work_Sans({
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin"],
   display: "swap",
 });

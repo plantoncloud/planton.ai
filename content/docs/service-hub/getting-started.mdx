@@ -3,9 +3,20 @@ title: "Getting Started with Services"
 description: "Deploy your first application on Planton Cloud in under 5 minutes"
 icon: guide
 order: 20
+author:
+  - name: Danilo Campos
+    title: Technical Content Lead
+    bio: "Passionate about developer experience and open source hardware. Building tools that make developers smile."
+    profilePicture: "https://api.dicebear.com/7.x/avataaars/svg?seed=DaniloCampos"
+    twitter: https://twitter.com/danilocampos
+    github: https://github.com/danilocampos
+    linkedin: https://linkedin.com/in/danilocampos
+    website: https://danilocampos.dev
+tags:
+  - Tutorial
+  - Getting Started
+  - Cloud
 ---
-
-# Getting Started with Services
 
 ## From Zero to Deployed in 5 Minutes
 
@@ -205,12 +216,12 @@ func main() {
     http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
         fmt.Fprintf(w, "Hello from Planton Cloud!")
     })
-    
+
     port := os.Getenv("PORT")
     if port == "" {
         port = "8080"
     }
-    
+
     http.ListenAndServe(":"+port, nil)
 }
 ```

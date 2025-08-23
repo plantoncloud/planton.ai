@@ -12,6 +12,9 @@ export default {
       center: true,
     },
     extend: {
+      fontFamily: {
+        'work-sans': ['var(--font-work-sans)', 'Work Sans', 'sans-serif'],
+      },
       colors: {
         primary: {
           0: "#000000",
