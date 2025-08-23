@@ -1,8 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-
-const DOCS_ROOT = path.join(process.cwd(), 'content/docs');
+import { DOCS_DIRECTORY } from '@/lib/constants';
 
 export interface DocItem {
   name: string;
@@ -32,7 +31,7 @@ export interface MarkdownContent {
     badge?: string;
     isExternal?: boolean;
     externalUrl?: string;
-    [key: string]: string | number | boolean | undefined;
+    [key: string]: string | string[] | number | boolean | undefined;
   };
   isMdx?: boolean;
 }
@@ -41,187 +40,187 @@ export interface MarkdownContent {
 const iconMap: Record<string, string> = {
   // Default icons
   'chart-line': '📊',
-  'flag': '🚩',
-  'eye': '👁️',
-  'gear': '⚙️',
-  'users': '👥',
-  'database': '🗄️',
-  'code': '💻',
-  'rocket': '🚀',
-  'book': '📚',
-  'docs': '📖',
-  'community': '👥',
-  'company': '🏢',
-  'handbook': '📋',
-  'guide': '🗺️',
-  'tutorial': '🎓',
-  'api': '🔌',
-  'sdk': '🛠️',
-  'integration': '🔗',
-  'migration': '🔄',
-  'deployment': '🚀',
-  'monitoring': '📊',
-  'security': '🔒',
-  'performance': '⚡',
-  'analytics': '📈',
-  'experiment': '🧪',
-  'feature': '✨',
-  'survey': '📝',
-  'error': '❌',
-  'session': '🎬',
-  'replay': '▶️',
-  'pipeline': '🔗',
-  'warehouse': '🏭',
-  'ai': '🤖',
-  'llm': '🧠',
-  'max': '🎯',
-  'product': '📦',
-  'web': '🌐',
-  'mobile': '📱',
-  'desktop': '💻',
-  'cloud': '☁️',
+  flag: '🚩',
+  eye: '👁️',
+  gear: '⚙️',
+  users: '👥',
+  database: '🗄️',
+  code: '💻',
+  rocket: '🚀',
+  book: '📚',
+  docs: '📖',
+  community: '👥',
+  company: '🏢',
+  handbook: '📋',
+  guide: '🗺️',
+  tutorial: '🎓',
+  api: '🔌',
+  sdk: '🛠️',
+  integration: '🔗',
+  migration: '🔄',
+  deployment: '🚀',
+  monitoring: '📊',
+  security: '🔒',
+  performance: '⚡',
+  analytics: '📈',
+  experiment: '🧪',
+  feature: '✨',
+  survey: '📝',
+  error: '❌',
+  session: '🎬',
+  replay: '▶️',
+  pipeline: '🔗',
+  warehouse: '🏭',
+  ai: '🤖',
+  llm: '🧠',
+  max: '🎯',
+  product: '📦',
+  web: '🌐',
+  mobile: '📱',
+  desktop: '💻',
+  cloud: '☁️',
   'self-host': '🏠',
-  'migrate': '🔄',
+  migrate: '🔄',
   'reverse-proxy': '🔄',
-  'billing': '💰',
-  'privacy': '🔒',
-  'contribute': '🤝',
-  'support': '🆘',
-  'changelog': '📝',
-  'roadmap': '🗺️',
-  'blog': '📰',
-  'careers': '💼',
-  'investors': '💎',
-  'press': '📢',
-  'faq': '❓',
-  'status': '📊',
-  'soc2': '🛡️',
-  'hipaa': '🏥',
-  'gdpr': '🇪🇺',
-  'ccpa': '🇺🇸',
-  'terms': '📜',
-  'policy': '📋',
+  billing: '💰',
+  privacy: '🔒',
+  contribute: '🤝',
+  support: '🆘',
+  changelog: '📝',
+  roadmap: '🗺️',
+  blog: '📰',
+  careers: '💼',
+  investors: '💎',
+  press: '📢',
+  faq: '❓',
+  status: '📊',
+  soc2: '🛡️',
+  hipaa: '🏥',
+  gdpr: '🇪🇺',
+  ccpa: '🇺🇸',
+  terms: '📜',
+  policy: '📋',
   // Additional icons you can add
-  'welcome': '👋',
-  'home': '🏠',
-  'star': '⭐',
-  'heart': '❤️',
-  'fire': '🔥',
-  'sparkles': '✨',
-  'light': '💡',
-  'zap': '⚡',
-  'wave': '👋',
-  'party': '🎉',
-  'gift': '🎁',
-  'trophy': '🏆',
-  'target': '🎯',
-  'compass': '🧭',
-  'map': '🗺️',
-  'telescope': '🔭',
-  'microscope': '🔬',
-  'crystal': '🔮',
-  'gem': '💎',
-  'crown': '👑',
-  'checkmark': '✅',
-  'lightning': '⚡',
-  'sunrise': '🌅',
-  'rainbow': '🌈',
-  'comet': '☄️',
-  'satellite': '🛰️',
-  'spaceship': '🚀',
-  'airplane': '✈️',
-  'helicopter': '🚁',
-  'parachute': '🪂',
-  'anchor': '⚓',
-  'sailboat': '⛵',
-  'speedboat': '🚤',
-  'construction': '🚧',
-  'wrench': '🔧',
-  'hammer': '🔨',
-  'toolbox': '🧰',
-  'magnet': '🧲',
-  'link': '🔗',
-  'chains': '⛓️',
-  'unlock': '🔓',
-  'key': '🔑',
-  'bell': '🔔',
-  'megaphone': '📣',
-  'loudspeaker': '📢',
-  'postal': '📮',
-  'inbox': '📥',
-  'outbox': '📤',
-  'package': '📦',
-  'label': '🏷️',
-  'bookmark': '🔖',
-  'calendar': '📅',
-  'clock': '🕐',
-  'hourglass': '⏳',
-  'stopwatch': '⏱️',
-  'timer': '⏲️',
-  'alarm': '⏰',
-  'watch': '⌚',
-  'battery': '🔋',
-  'plug': '🔌',
-  'bulb': '💡',
-  'flashlight': '🔦',
-  'candle': '🕯️',
-  'diya': '🪔',
-  'bricks': '🧱',
-  'window': '🪟',
-  'door': '🚪',
-  'bed': '🛏️',
-  'couch': '🛋️',
-  'chair': '🪑',
-  'toilet': '🚽',
-  'shower': '🚿',
-  'bathtub': '🛁',
-  'mouse': '🖱️',
-  'keyboard': '⌨️',
-  'printer': '🖨️',
-  'fax': '📠',
-  'television': '📺',
-  'radio': '📻',
-  'microphone': '🎤',
-  'headphones': '🎧',
-  'speaker': '🔈',
-  'mute': '🔇',
-  'sound': '🔊',
-  'notification': '🔔',
-  'search': '🔍',
-  'zoom': '🔎',
-  'syringe': '💉',
-  'pill': '💊',
-  'dna': '🧬',
-  'microbe': '🦠',
-  'petri': '🧫',
-  'test': '🧪',
-  'stethoscope': '🩺',
-  'xray': '🩻',
-  'adhesive': '🩹'
+  welcome: '👋',
+  home: '🏠',
+  star: '⭐',
+  heart: '❤️',
+  fire: '🔥',
+  sparkles: '✨',
+  light: '💡',
+  zap: '⚡',
+  wave: '👋',
+  party: '🎉',
+  gift: '🎁',
+  trophy: '🏆',
+  target: '🎯',
+  compass: '🧭',
+  map: '🗺️',
+  telescope: '🔭',
+  microscope: '🔬',
+  crystal: '🔮',
+  gem: '💎',
+  crown: '👑',
+  checkmark: '✅',
+  lightning: '⚡',
+  sunrise: '🌅',
+  rainbow: '🌈',
+  comet: '☄️',
+  satellite: '🛰️',
+  spaceship: '🚀',
+  airplane: '✈️',
+  helicopter: '🚁',
+  parachute: '🪂',
+  anchor: '⚓',
+  sailboat: '⛵',
+  speedboat: '🚤',
+  construction: '🚧',
+  wrench: '🔧',
+  hammer: '🔨',
+  toolbox: '🧰',
+  magnet: '🧲',
+  link: '🔗',
+  chains: '⛓️',
+  unlock: '🔓',
+  key: '🔑',
+  bell: '🔔',
+  megaphone: '📣',
+  loudspeaker: '📢',
+  postal: '📮',
+  inbox: '📥',
+  outbox: '📤',
+  package: '📦',
+  label: '🏷️',
+  bookmark: '🔖',
+  calendar: '📅',
+  clock: '🕐',
+  hourglass: '⏳',
+  stopwatch: '⏱️',
+  timer: '⏲️',
+  alarm: '⏰',
+  watch: '⌚',
+  battery: '🔋',
+  plug: '🔌',
+  bulb: '💡',
+  flashlight: '🔦',
+  candle: '🕯️',
+  diya: '🪔',
+  bricks: '🧱',
+  window: '🪟',
+  door: '🚪',
+  bed: '🛏️',
+  couch: '🛋️',
+  chair: '🪑',
+  toilet: '🚽',
+  shower: '🚿',
+  bathtub: '🛁',
+  mouse: '🖱️',
+  keyboard: '⌨️',
+  printer: '🖨️',
+  fax: '📠',
+  television: '📺',
+  radio: '📻',
+  microphone: '🎤',
+  headphones: '🎧',
+  speaker: '🔈',
+  mute: '🔇',
+  sound: '🔊',
+  notification: '🔔',
+  search: '🔍',
+  zoom: '🔎',
+  syringe: '💉',
+  pill: '💊',
+  dna: '🧬',
+  microbe: '🦠',
+  petri: '🧫',
+  test: '🧪',
+  stethoscope: '🩺',
+  xray: '🩻',
+  adhesive: '🩹'
 };
 
 // Category-based icon mapping
 const categoryIcons: Record<string, string> = {
-  'products': '📦',
-  'docs': '📚',
-  'community': '👥',
-  'company': '🏢',
-  'handbook': '📖',
-  'solutions': '💡',
+  products: '📦',
+  docs: '📚',
+  community: '👥',
+  company: '🏢',
+  handbook: '📖',
+  solutions: '💡',
   'open-source': '🔓',
   'general-pages': '📄',
   'by-use-case': '🎯',
   'chat-ops': '💬',
-  'deployment': '🚀',
-  'monitoring': '📊',
-  'security': '🔒',
-  'performance': '⚡',
-  'analytics': '📈',
-  'experiments': '🧪',
+  deployment: '🚀',
+  monitoring: '📊',
+  security: '🔒',
+  performance: '⚡',
+  analytics: '📈',
+  experiments: '🧪',
   'feature-flags': '🚩',
   'session-replay': '🎬',
   'error-tracking': '❌',
-  'surveys': '📝',
+  surveys: '📝',
   'data-pipelines': '🔗',
   'data-warehouse': '🏭',
   'llm-observability': '🤖',
@@ -250,7 +249,7 @@ function resolveIcon(
 const getDefaultIcon = (type: string, name: string, category?: string): string => {
   // Check if there's a specific icon in the name
   const nameLower = name.toLowerCase();
-  
+
   // Check for specific patterns in the name
   if (nameLower.includes('api')) return iconMap['api'];
   if (nameLower.includes('sdk')) return iconMap['sdk'];
@@ -301,44 +300,40 @@ const getDefaultIcon = (type: string, name: string, category?: string): string =
   if (nameLower.includes('ccpa')) return iconMap['ccpa'];
   if (nameLower.includes('terms')) return iconMap['terms'];
   if (nameLower.includes('policy')) return iconMap['policy'];
-  
+
   // Check category-based icons
   if (category && categoryIcons[category]) {
     return categoryIcons[category];
   }
-  
+
   // Default icons based on type
   return type === 'directory' ? '📁' : '📄';
 };
 
-export async function getMarkdownContent(filePath: string): Promise<MarkdownContent> {
+export async function getMarkdownContent(filePath: string): Promise<string> {
   // Try different file extensions and paths (.md and .mdx)
   const possiblePaths = [
-    path.join(DOCS_ROOT, `${filePath}.md`),
-    path.join(DOCS_ROOT, `${filePath}.mdx`),
-    path.join(DOCS_ROOT, filePath, 'index.md'),
-    path.join(DOCS_ROOT, filePath, 'index.mdx'),
-    path.join(DOCS_ROOT, filePath, 'README.md'),
-    path.join(DOCS_ROOT, filePath, 'README.mdx'),
+    path.join(DOCS_DIRECTORY, `${filePath}.md`),
+    path.join(DOCS_DIRECTORY, `${filePath}.mdx`),
+    path.join(DOCS_DIRECTORY, filePath, 'index.md'),
+    path.join(DOCS_DIRECTORY, filePath, 'index.mdx'),
+    path.join(DOCS_DIRECTORY, filePath, 'README.md'),
+    path.join(DOCS_DIRECTORY, filePath, 'README.mdx')
   ];
 
   for (const candidatePath of possiblePaths) {
     if (fs.existsSync(candidatePath)) {
-      const fileContent = fs.readFileSync(candidatePath, 'utf-8');
-      const { content, data } = matter(fileContent);
-      return { content, data, isMdx: candidatePath.endsWith('.mdx') };
+      return fs.readFileSync(candidatePath, 'utf-8');
     }
   }
 
   // If no markdown file found, try to find any .md or .mdx file in the directory
-  const dirPath = path.join(DOCS_ROOT, filePath);
+  const dirPath = path.join(DOCS_DIRECTORY, filePath);
   if (fs.existsSync(dirPath) && fs.statSync(dirPath).isDirectory()) {
     const files = fs.readdirSync(dirPath);
-    const mdLikeFile = files.find(file => file.endsWith('.md') || file.endsWith('.mdx'));
+    const mdLikeFile = files.find((file) => file.endsWith('.md') || file.endsWith('.mdx'));
     if (mdLikeFile) {
-      const fileContent = fs.readFileSync(path.join(dirPath, mdLikeFile), 'utf-8');
-      const { content, data } = matter(fileContent);
-      return { content, data, isMdx: mdLikeFile.endsWith('.mdx') };
+      return fs.readFileSync(path.join(dirPath, mdLikeFile), 'utf-8');
     }
   }
 
@@ -346,7 +341,7 @@ export async function getMarkdownContent(filePath: string): Promise<MarkdownCont
 }
 
 export async function getDocumentationStructure(): Promise<DocItem[]> {
-  return buildStructure(DOCS_ROOT);
+  return buildStructure(DOCS_DIRECTORY);
 }
 
 function buildStructure(dirPath: string, relativePath: string = ''): DocItem[] {
@@ -368,7 +363,7 @@ function buildStructure(dirPath: string, relativePath: string = ''): DocItem[] {
         // Try to get metadata from index/README (.md or .mdx)
         let metadata: MarkdownContent['data'] = {};
         const indexFiles = ['index.md', 'index.mdx', 'README.md', 'README.mdx'];
-        
+
         for (const indexFile of indexFiles) {
           const indexPath = path.join(fullPath, indexFile);
           if (fs.existsSync(indexPath)) {
@@ -384,12 +379,10 @@ function buildStructure(dirPath: string, relativePath: string = ''): DocItem[] {
         }
 
         const category = relativePath.split('/')[0] || item;
-        
+
         // Check if this directory has an index file
-        const hasIndex = indexFiles.some(indexFile => 
-          fs.existsSync(path.join(fullPath, indexFile))
-        );
-        
+        const hasIndex = indexFiles.some((indexFile) => fs.existsSync(path.join(fullPath, indexFile)));
+
         structure.push({
           name: item,
           type: 'directory',
@@ -401,35 +394,42 @@ function buildStructure(dirPath: string, relativePath: string = ''): DocItem[] {
           category,
           order: metadata.order || 0,
           badge: metadata.badge,
-          isExternal: metadata.isExternal || false,
-          externalUrl: metadata.externalUrl,
+          isExternal: (metadata.isExternal as boolean) || false,
+          externalUrl: metadata.externalUrl as string | undefined,
           hasIndex
         });
       }
     } else if (item.endsWith('.md') || item.endsWith('.mdx')) {
       // Skip certain files that are not meant for documentation
       // Also skip index.md/mdx and README.md/mdx as they represent directory content
-      if (!item.startsWith('prompt.') && 
-          !item.startsWith('response.') && 
-          !item.includes('.not-good.') &&
-          !['index.md', 'index.mdx', 'README.md', 'README.mdx'].includes(item)) {
+      if (
+        !item.startsWith('prompt.') &&
+        !item.startsWith('response.') &&
+        !item.includes('.not-good.') &&
+        !['index.md', 'index.mdx', 'README.md', 'README.mdx'].includes(item)
+      ) {
         try {
           const fileContent = fs.readFileSync(fullPath, 'utf-8');
           const { data } = matter(fileContent);
           const category = relativePath.split('/')[0] || 'general';
-          
+
           structure.push({
             name: item.replace(/\.(md|mdx)$/i, ''),
             type: 'file',
             path: itemRelativePath.replace(/\.(md|mdx)$/i, ''),
-            title: data.title || formatName(item.replace(/\.(md|mdx)$/i, '')),
-            description: data.description,
-            icon: resolveIcon(data.icon as string | undefined, 'file', item.replace(/\.(md|mdx)$/i, ''), category),
+            title: (data.title as string) || formatName(item.replace(/\.(md|mdx)$/i, '')),
+            description: data.description as string | undefined,
+            icon: resolveIcon(
+              data.icon as string | undefined,
+              'file',
+              item.replace(/\.(md|mdx)$/i, ''),
+              category
+            ),
             category,
-            order: data.order || 0,
-            badge: data.badge,
-            isExternal: data.isExternal || false,
-            externalUrl: data.externalUrl
+            order: (data.order as number) || 0,
+            badge: data.badge as string | undefined,
+            isExternal: (data.isExternal as boolean) || false,
+            externalUrl: data.externalUrl as string | undefined
           });
         } catch (error) {
           console.warn(`Failed to parse metadata from ${fullPath}:`, error);
@@ -476,7 +476,7 @@ function formatName(name: string): string {
   // Convert kebab-case or snake_case to Title Case
   return name
     .replace(/[-_]/g, ' ')
-    .replace(/\b\w/g, l => l.toUpperCase())
+    .replace(/\b\w/g, (l) => l.toUpperCase())
     .replace(/\s+/g, ' ')
     .trim();
 }

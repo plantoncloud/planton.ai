@@ -5,8 +5,6 @@ icon: service
 order: 40
 ---
 
-# ServiceHub
-
 ## Your Command Center for Modern Application Delivery
 
 Remember when deploying code meant SSH-ing into servers, running scripts, and crossing your fingers? Or maybe you're currently maintaining a maze of CI/CD pipelines across different tools? ServiceHub changes all that.
@@ -20,15 +18,15 @@ ServiceHub is Planton Cloud's answer to the question: "Why can't deploying backe
 Think of ServiceHub as your application delivery platform that handles the entire journey from code to cloud:
 
 ### 📦 Services
-**Connect Git repos & configure builds**  
+**Connect Git repos & configure builds**
 Define what to build, from where, and how. Support for monorepos, custom triggers, and more.
 
 ### 🔄 Pipelines
-**Automated CI/CD workflows**  
+**Automated CI/CD workflows**
 Every commit triggers intelligent pipelines that build, test, and deploy your applications.
 
 ### 🚀 Deployments
-**Multi-cloud, multi-platform delivery**  
+**Multi-cloud, multi-platform delivery**
 Deploy to Kubernetes, AWS ECS, Google Cloud Run, or anywhere else your apps need to live.
 
 ## The Developer Experience You Deserve
@@ -39,7 +37,7 @@ ServiceHub was born from a simple frustration: why is deploying applications sti
 ```bash
 # Traditional approach
 - Set up CI/CD pipeline
-- Configure build scripts  
+- Configure build scripts
 - Set up deployment scripts
 - Configure webhooks
 - Manage secrets
@@ -79,16 +77,16 @@ graph LR
     A[Your Code] --> B[ServiceHub]
     B --> C[Container Images]
     C --> D[Deployment Targets]
-    
+
     E[InfraHub] --> D
     F[Secrets Manager] --> D
     G[IAM] --> B
-    
+
     style B fill:#4CAF50,stroke:#333,stroke-width:2px
 ```
 
 - **InfraHub** provisions the infrastructure where your services run
-- **ServiceHub** builds and deploys your applications to that infrastructure  
+- **ServiceHub** builds and deploys your applications to that infrastructure
 - **Secrets Manager** provides runtime configuration
 - **IAM** controls who can deploy what, where
 
@@ -110,7 +108,7 @@ Deep dive into build configurations and customization
 Here's what ServiceHub enables under the hood:
 
 - **< 30 seconds** from commit to pipeline start
-- **Zero-config** builds for 8+ major languages  
+- **Zero-config** builds for 8+ major languages
 - **Parallel builds** for monorepo services
 - **Preview environments** for pull requests
 - **Multi-cloud** deployment targets

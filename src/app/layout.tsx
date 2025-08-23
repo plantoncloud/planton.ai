@@ -1,25 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Roboto } from "next/font/google";
+import { Work_Sans } from "next/font/google";
 import "./globals.css";
 import { Layout } from "./components/layout/MainLayout";
 import { ThemeProvider } from "./providers/theme";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const roboto = Roboto({
-  weight: ["300", "400", "500", "700"],
+const workSans = Work_Sans({
+  weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-work-sans",
 });
 
 export const metadata: Metadata = {
@@ -49,7 +39,7 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${roboto.className} antialiased h-screen bg-cover bg-center bg-black`}
+        className={`${workSans.variable} antialiased h-screen bg-cover bg-center bg-black`}
       >
         <ThemeProvider>
           <Layout>{children}</Layout>

@@ -9,7 +9,7 @@ import matter from 'gray-matter';
 import { formatDate } from '@/lib/utils';
 import { Author } from '@/lib/mdx';
 
-interface BlogPost {
+interface MdxMetadata {
   title: string;
   date: string;
   author: Author[];
@@ -24,66 +24,78 @@ interface MDXRendererProps {
   mdxContent: string;
 }
 
-const MDXRenderer: React.FC<MDXRendererProps> = ({ mdxContent }) => {
-  // Parse the MDX content with gray-matter
+export const MDXRenderer: React.FC<MDXRendererProps> = ({ mdxContent }) => {
   const { data, content } = matter(mdxContent);
-  const post: BlogPost = data as BlogPost;
+  const metadata: MdxMetadata = data as MdxMetadata;
 
   return (
     <div className="w-full">
       <article>
         {/* Header */}
         <header className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-4">
-            {post.title}
-          </h1>
+          {metadata.title && (
+            <h1 className="text-4xl font-bold text-white mb-4">
+              {metadata.title}
+            </h1>
+          )}
           
-          <div className="flex items-center gap-4 text-gray-300 mb-6">
-            <time dateTime={post.date}>
-              {formatDate(post.date)}
-            </time>
-            <span>•</span>
-            <div className="flex gap-2">
-              {post.author.map((author, index) => (
-                <span key={index} className="font-medium">
-                  {author.name}
-                </span>
-              ))}
+          {/* Date and Author */}
+          {(metadata.date || metadata.author) && (
+            <div className="flex items-center gap-4 text-gray-300 mb-6">
+              {metadata.date && (
+                <time dateTime={metadata.date}>
+                  {formatDate(metadata.date)}
+                </time>
+              )}
+              {metadata.author && (
+                <>
+                  {metadata.date && <span>•</span>}
+                  <div className="flex gap-2">
+                    {metadata.author.map((author, index) => (
+                      <span key={index} className="font-medium">
+                        {author.name}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
-          </div>
+          )}
 
           {/* Tags */}
-          <div className="flex gap-2 mb-6">
-            {post.tags.map((tag, index) => (
+          {metadata.tags && (
+            <div className="flex gap-2 mb-6">
+            {metadata.tags.map((tag, index) => (
               <span
                 key={index}
                 className="px-3 py-1 bg-blue-900 text-blue-200 text-sm font-medium rounded-full border border-blue-700"
               >
                 {tag}
-              </span>
-            ))}
-          </div>
+                </span>
+              ))}
+            </div>
+          )}
 
           {/* Featured Image */}
-          {post.featuredImage && (
+          {metadata.featuredImage && (
             <div className="mb-6">
               <img
-                src={post.featuredImage}
-                alt={post.title}
+                src={metadata.featuredImage}
+                alt={metadata.title}
                 className={`w-full rounded-lg shadow-lg ${
-                  post.featuredImageType === 'full' ? 'h-96 object-cover' : 'max-h-96 object-contain'
+                  metadata.featuredImageType === 'full' ? 'h-96 object-cover' : 'max-h-96 object-contain'
                 }`}
               />
             </div>
           )}
 
           {/* Featured Video */}
-          {post.featuredVideo && (
+          {metadata.featuredVideo && (
             <div className="mb-6">
               <div className="relative w-full h-0 pb-[56.25%] rounded-lg overflow-hidden shadow-lg">
                 <iframe
-                  src={post.featuredVideo}
-                  title={post.title}
+                  src={metadata.featuredVideo}
+                  title={metadata.title}
                   className="absolute top-0 left-0 w-full h-full"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -278,5 +290,3 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ mdxContent }) => {
     </div>
   );
 };
-
-export default MDXRenderer; 

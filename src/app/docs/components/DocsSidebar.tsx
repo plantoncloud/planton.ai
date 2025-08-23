@@ -21,9 +21,9 @@ interface SidebarItemProps {
   onNavigate?: () => void;
 }
 
-const SidebarItem: FC<SidebarItemProps> = ({ 
-  item, 
-  level = 0, 
+const SidebarItem: FC<SidebarItemProps> = ({
+  item,
+  level = 0,
   onNavigate
 }) => {
   const pathname = usePathname();
@@ -46,18 +46,18 @@ const SidebarItem: FC<SidebarItemProps> = ({
         </span>
       );
     }
-    
+
     if (item.type === 'directory') {
       return <FolderIcon className="text-blue-400" fontSize="small" />;
     }
-    
+
     return <FileIcon className="text-gray-400" fontSize="small" />;
   };
 
   // Render badge if present
   const renderBadge = () => {
     if (!item.badge) return null;
-    
+
     const badgeColors: Record<string, string> = {
       'Popular': 'bg-green-100 text-green-800',
       'Beta': 'bg-blue-100 text-blue-800',
@@ -65,9 +65,9 @@ const SidebarItem: FC<SidebarItemProps> = ({
       'Deprecated': 'bg-red-100 text-red-800',
       'Experimental': 'bg-yellow-100 text-yellow-800'
     };
-    
+
     const colorClass = badgeColors[item.badge] || 'bg-gray-100 text-gray-800';
-    
+
     return (
       <Chip
         label={item.badge}
@@ -86,8 +86,8 @@ const SidebarItem: FC<SidebarItemProps> = ({
           <Box className="flex items-center gap-2 flex-1">
             {renderIcon()}
             {item.hasIndex ? (
-              <Link 
-                href={`/docs/${item.path}`} 
+              <Link
+                href={`/docs/${item.path}`}
                 onClick={handleNavigate}
                 className="flex-1"
               >
@@ -120,9 +120,9 @@ const SidebarItem: FC<SidebarItemProps> = ({
   // Handle external links
   if (item.isExternal && item.externalUrl) {
     return (
-      <a 
-        href={item.externalUrl} 
-        target="_blank" 
+      <a
+        href={item.externalUrl}
+        target="_blank"
         rel="noopener noreferrer"
         className="block"
       >
@@ -141,9 +141,8 @@ const SidebarItem: FC<SidebarItemProps> = ({
   return (
     <Link href={`/docs/${item.path}`} onClick={handleNavigate}>
       <Box
-        className={`flex items-center gap-2 px-4 py-2 hover:bg-gray-700 cursor-pointer ${
-          isActive ? 'bg-blue-600 text-white' : 'text-gray-300'
-        }`}
+        className={`flex items-center gap-2 px-4 py-2 hover:bg-gray-700 cursor-pointer ${isActive ? 'bg-blue-600 text-white' : 'text-gray-300'
+          }`}
       >
         {renderIcon()}
         <Typography className="text-sm flex-1">
