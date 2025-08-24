@@ -72,6 +72,7 @@ yarn start
 - Docs: Markdown files under `content/docs/**`
 - Blog: MD/MDX under `content/blog/**`
 - Static assets: `public/`
+- Media (images, videos): See Media management below
 
 The app uses file system–based routing and content rendering. To add a new page:
 1) Create a Markdown/MDX file under `content/docs` or `content/blog`
@@ -143,4 +144,61 @@ Prereqs:
 - `gh` installed and authenticated (`gh auth status`)
 - `python3` installed
 - Writable `origin` remote
+
+## Media management (images via Cloudflare R2)
+
+We store screenshots and other image assets in Cloudflare R2 instead of baking them into the static Next.js export. This keeps the repo lean as the volume grows, gives us CDN-like delivery (with a custom domain soon), and lets us manage caching independently.
+
+### Summary
+- Author images locally under `content/media/images/` in this repo
+- Sync images to Cloudflare R2 with `make sync-media` (uses `rclone`)
+- Reference images in docs/blog via the public R2 URL (temporary dev URL now; custom domain coming)
+- Keep a copy in-repo for now to aid local authoring and preview
+
+### One-time setup
+1. Install rclone
+   ```bash
+   brew install rclone
+   ```
+2. Configure the `r2` remote in `~/.config/rclone/rclone.conf` (ask an admin for credentials)
+   ```ini
+   [r2]
+   type = s3
+   provider = Cloudflare
+   access_key_id = <from Cloudflare>
+   secret_access_key = <from Cloudflare>
+   endpoint = https://074755a78d8e8f77c119a90a125e8a06.r2.cloudflarestorage.com
+   acl = private
+   ```
+   - Bucket: `planton-ai-media`
+   - Public dev base URL: `https://pub-524d21c5655e4da5b4cbb0b0e80a6a7e.r2.dev/images/`
+
+### Daily workflow
+1. Add or update images under `content/media/images/`
+2. Sync to R2:
+   ```bash
+   make sync-media
+   ```
+   This runs:
+   ```bash
+   rclone sync content/media/ r2:planton-ai-media --progress --transfers 8 --checkers 16 --s3-acl private
+   ```
+3. Reference images from docs/blog using the public URL:
+   ```md
+   ![Alt text](https://pub-524d21c5655e4da5b4cbb0b0e80a6a7e.r2.dev/images/my-screenshot.png)
+   ```
+
+### Conventions
+- Filenames: lowercase, hyphens, contextual suffixes when helpful, e.g., `aws-credentials_123456789012_dev.png`
+- Keep `content/media/` committed for now. We’ll revisit once the public endpoint is on a custom domain with caching configured.
+- Videos: will be handled via Cloudflare Stream; a separate section will be added later.
+
+### Troubleshooting
+- Verify connectivity: `rclone tree r2:` or `rclone ls r2:planton-ai-media`
+- 403/URL issues: confirm object path matches, and that the public dev gateway is enabled for the bucket/prefix.
+- Long syncs: tune `--transfers`/`--checkers` in the Makefile target.
+
+### Roadmap
+- Move to a custom domain for R2 public access and enable caching headers.
+- Optional helper to transform local paths to R2 URLs during authoring.
 
