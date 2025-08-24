@@ -7,6 +7,8 @@ alwaysApply: false
 
 Purpose: Transform technical transcripts and source code into comprehensive, engaging documentation for Planton Cloud features. Use this when creating documentation for new platform sections based on recorded explanations.
 
+**⚠️ CRITICAL: Only document features that actually exist. Never make up commands, features, or capabilities. If it's not in the source code or transcripts, DO NOT include it.**
+
 Usage: Invoke explicitly as `@transcript-to-docs` when you have a transcript explaining a feature/concept and need to create full documentation.
 
 Dependencies:
@@ -16,10 +18,29 @@ Dependencies:
 ## Process Overview
 1. Analyze the transcript: extract key concepts, technical details, narrative flow
 2. Research source code: read protobufs, services, and CLI to validate behavior
-3. Create documentation structure: multiple interconnected pages
-4. Write human-friendly content: translate technical detail into approachable explanations
+3. **CRITICAL**: Verify every feature, command, and capability exists in source code
+4. Create documentation structure: multiple interconnected pages
+5. Write human-friendly content: translate technical detail into approachable explanations
 
 ## Documentation Requirements
+
+### CRITICAL: Source Verification Requirements
+**NEVER MAKE UP FEATURES, COMMANDS, OR CAPABILITIES**
+
+Before documenting ANY feature:
+1. **Commands**: Search for the exact command in `planton-cloud/client-apps/cli`. If not found, DO NOT include it.
+2. **API Operations**: Verify in protobuf definitions. If the RPC/field doesn't exist, DO NOT document it.
+3. **Features**: Check transcripts, backend services, and APIs. If not explicitly mentioned or implemented, DO NOT add it.
+4. **Configuration Options**: Only document fields that exist in the protobuf specs.
+
+**When in doubt, OMIT rather than ASSUME**. It's better to have less documentation than wrong documentation.
+
+Examples of what NOT to do:
+- Don't invent CLI commands like `planton infra import` if they don't exist
+- Don't add features like "drift detection" unless found in source
+- Don't assume credential types like "assume role" exist without verification
+- Don't create sections about performance optimization unless documented
+- Don't add "nice to have" features that aren't implemented
 
 ### Tone and Style
 - Conversational and direct; write as if explaining to a colleague
@@ -76,17 +97,26 @@ name: real-examples
 5. Celebrate simplicity (“Push code, get deployments.”)
 
 ## Implementation Checklist
-- [ ] Extract key concepts and make a concept map
+- [ ] Extract key concepts and make a concept map FROM TRANSCRIPTS ONLY
 - [ ] Research implementation in source code:
   - Backend: `planton-cloud/backend/services/<feature-name>`
   - APIs: `planton-cloud/apis/cloud/planton/<domain>`
   - CLI: `planton-cloud/client-apps/cli/cmd/planton/root/<feature>`
+- [ ] **VERIFY each feature exists**:
+  - [ ] Every CLI command: grep for it in CLI source
+  - [ ] Every API operation: find it in protobufs
+  - [ ] Every configuration option: locate in spec.proto
+  - [ ] Every workflow: trace through backend implementation
 - [ ] Create structure: index → concept → getting‑started → deep‑dives
 - [ ] Write content that:
   - Uses transcript as foundation
-  - Adds practical examples from source
-  - Includes YAML/code snippets
-  - Provides troubleshooting tips
+  - **ONLY includes verified features from source**
+  - Includes YAML/code snippets **copied from actual examples**
+  - Provides troubleshooting tips **based on actual error handling**
+- [ ] Final verification pass:
+  - [ ] Re-check every command against CLI source
+  - [ ] Validate every YAML example against protobufs
+  - [ ] Remove any speculative or "would be nice" content
 - [ ] Ensure navigation works:
   - Frontmatter (title, description, icon, order)
   - Directories with `index.mdx` are clickable
@@ -100,44 +130,78 @@ To documentation:
 > Remember the first time you pushed code to Vercel and watched it automatically build and deploy? That magical feeling is what we’re bringing to all your backend services…
 
 ## Key Patterns to Follow
-1. Monorepo examples: always include simple + monorepo configs
+1. Monorepo examples: always include simple + monorepo configs (if supported in source)
 2. Visual organization: headers/spacing for scannability
-3. Progressive disclosure: start simple, add complexity
-4. Real configuration: use actual protobuf field names
-5. CLI examples: include real commands
+3. Progressive disclosure: start simple, add complexity (with real features only)
+4. Real configuration: use actual protobuf field names (copy exactly from proto files)
+5. CLI examples: include ONLY commands that exist in CLI source code
+6. Every example must be verifiable: reader should be able to run it successfully
 
 ## Anti‑Patterns to Avoid
-- Don’t use React components (Callout, Card, Tabs, etc.)
-- Don’t create walls of dense technical text
-- Don’t assume deep DevOps knowledge
-- Don’t skip “why” to rush to “how”
-- Don’t omit concrete examples
+- **DON'T MAKE UP FEATURES OR COMMANDS** - This is the #1 rule
+- Don't invent "logical" features that "should" exist but aren't implemented
+- Don't add aspirational content about future capabilities
+- Don't extrapolate features from similar products
+- Don't use React components (Callout, Card, Tabs, etc.)
+- Don't create walls of dense technical text
+- Don't assume deep DevOps knowledge
+- Don't skip "why" to rush to "how"
+- Don't omit concrete examples (but only use real ones)
 
-## Source Validation (strict)
-Always ground documentation in actual source:
-- Protobufs for accurate field names
-- Service implementations for behavior
-- CLI code for commands
-- IaC for infrastructure details
+## Source Validation (MANDATORY)
+**Every single claim must be traceable to source code or transcripts**
 
-Reference pattern:
+Required verification:
+- **CLI Commands**: Must exist in `planton-cloud/client-apps/cli/cmd/planton/root/`
+  - Use grep/search to find exact command implementation
+  - If command not found = DO NOT DOCUMENT IT
+- **API Fields**: Must exist in protobuf definitions
+  - Check exact field names and types
+  - No guessing at field names or options
+- **Features/Workflows**: Must be in transcripts OR implemented in backend
+  - Trace through actual service code
+  - Look for the exact feature, not similar ones
+- **Configuration Examples**: Must match protobuf schemas exactly
+  - Copy field names verbatim
+  - Don't add "helpful" extra fields
+
+Reference pattern (include these in docs):
 ```
 Based on: `planton-cloud/backend/services/service-hub/...`
 API: `planton-cloud/apis/cloud/planton/apis/servicehub/service/v1/spec.proto`
+Transcript: `websites/kb.planton.cloud/content/product/service-hub/transcripts/...`
 ```
 
+**If you cannot find source evidence for a feature, it MUST be omitted**
+
+## When Features Are Not Found in Sources
+If a feature seems logical or is mentioned vaguely but you cannot find concrete implementation:
+1. **DO NOT INCLUDE IT** - No exceptions
+2. **DO NOT** write "Coming soon" or "Future capability"
+3. **DO NOT** extrapolate from similar features
+4. **DO** focus on what IS implemented and documented
+5. **DO** make the existing features shine with good examples
+
+Remember: Incomplete but accurate docs > Complete but inaccurate docs
+
 ## Final Quality Check
+- [ ] **Every feature documented exists in source code** ← CRITICAL
+- [ ] **Every command shown works when executed** ← CRITICAL
+- [ ] **Every YAML example matches protobuf schemas** ← CRITICAL
 - [ ] Clear to a developer new to the platform?
-- [ ] Enough copy‑pastable examples?
-- [ ] Addresses common pain points?
+- [ ] Enough copy‑pastable examples? (from real sources only)
+- [ ] Addresses common pain points? (mentioned in transcripts)
 - [ ] Friendly but professional tone?
-- [ ] All claims backed by source code?
+- [ ] All claims backed by source code with explicit references?
 
 ## Summary
-This rule encapsulates the process used for ServiceHub docs:
-1) Translate transcripts into human‑friendly explanations
-2) Create interconnected pages (index, concept, getting‑started, deep‑dives)
-3) Use a conversational tone with practical examples
-4) Ground everything in source
-5) Use standard Markdown (no React components)
-6) Make complex topics accessible with progressive disclosure
+This rule ensures accurate documentation by:
+1) **ONLY documenting features that exist in source code or transcripts**
+2) Translating transcripts into human‑friendly explanations
+3) Creating interconnected pages (index, concept, getting‑started, deep‑dives)
+4) Using a conversational tone with verified examples only
+5) Grounding EVERYTHING in source - no assumptions or extrapolations
+6) Using standard Markdown (no React components)
+7) Making complex topics accessible without inventing features
+
+**Core principle: If it's not in the source, it's not in the docs.**
