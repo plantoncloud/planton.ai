@@ -90,6 +90,7 @@ export function getBlogPostContentBySlug(slug: string): string {
 
     return fs.readFileSync(fullPath, 'utf8');
   } catch (error) {
+    console.error('Error reading blog post content for slug: ', slug, error);
     return '';
   }
 }
