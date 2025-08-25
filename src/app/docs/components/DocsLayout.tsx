@@ -13,9 +13,10 @@ import { Menu as MenuIcon, Close as CloseIcon } from '@mui/icons-material';
 interface DocsLayoutProps {
   children: React.ReactNode;
   author?: Author[];
+  content?: string;
 }
 
-export const DocsLayout: React.FC<DocsLayoutProps> = ({ children, author = [] }) => {
+export const DocsLayout: React.FC<DocsLayoutProps> = ({ children, author = [] , content}) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleSidebarToggle = () => {
@@ -25,7 +26,7 @@ export const DocsLayout: React.FC<DocsLayoutProps> = ({ children, author = [] })
   return (
     <div className="min-h-screen font-work-sans antialiased">
       {/* Header */}
-      <div className="sticky top-0 z-10 border-b border-gray-700">
+      <div className="sticky top-0 z-10 border-b border-gray-800">
         <Stack direction="row" className="items-center justify-between px-4 py-3">
           <Stack direction="row" className="items-center gap-4">
             <IconButton onClick={handleSidebarToggle} className="text-white md:hidden" size="small">
@@ -40,9 +41,11 @@ export const DocsLayout: React.FC<DocsLayoutProps> = ({ children, author = [] })
       </div>
 
       <div className="flex">
-        {/* Left Sidebar - Fixed width */}
-        <div className="hidden md:block w-80 min-h-screen border-r border-gray-700 flex-shrink-0">
-          <DocsSidebar />
+        {/* Left Sidebar - Sticky */}
+        <div className="hidden md:block sticky top-16 h-screen w-80 flex-shrink-0">
+          <div className="h-full bg-black/95 border-r border-gray-800">
+            <DocsSidebar />
+          </div>
         </div>
 
         {/* Mobile Sidebar */}
@@ -52,12 +55,12 @@ export const DocsLayout: React.FC<DocsLayoutProps> = ({ children, author = [] })
           onClose={handleSidebarToggle}
           className="md:hidden"
           PaperProps={{
-            className: 'w-80',
+            className: 'w-80 bg-black/95',
           }}
         >
           <Stack
             direction="row"
-            className="items-center justify-between p-4 border-b border-gray-700"
+            className="items-center justify-between p-4 border-b border-gray-800"
           >
             <Typography variant="h6" className="text-white font-semibold">
               Documentation
@@ -76,12 +79,12 @@ export const DocsLayout: React.FC<DocsLayoutProps> = ({ children, author = [] })
           </div>
         </div>
 
-        {/* Right Sidebar - Only render when authors are present */}
-        {author.length > 0 && (
-          <div className="hidden xl:block w-80 min-h-screen border-l border-gray-700 flex-shrink-0">
-            <RightSidebar author={author} />
+        {/* Right Sidebar - Always render for table of contents */}
+        <div className="hidden xl:block sticky top-16 h-screen w-80 flex-shrink-0">
+          <div className="h-full bg-black/95 border-l border-gray-800">
+            <RightSidebar author={author} content={content} />
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

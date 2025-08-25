@@ -71,6 +71,7 @@ export default async function DocsPage({ params }: { params: DocsParams }) {
     return (
       <DocsLayout 
         author={data?.author as unknown as Author[]}
+        content={content}
       >
         <MDXRenderer 
           mdxContent={mdxContent}
