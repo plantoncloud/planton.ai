@@ -18,7 +18,7 @@ export async function generateStaticParams() {
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
   const post = getBlogPostContentBySlug(slug);
-  
+
   if (!post) {
     notFound();
   }
@@ -30,8 +30,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   return (
     <BlogLayout posts={allPosts} currentSlug={slug}>
       <div className="p-8">
-        <MDXRenderer mdxContent={mdxContent} />
+        <MDXRenderer mdxContent={mdxContent} markdownContent={post} />
       </div>
     </BlogLayout>
   );
-} 
+}
