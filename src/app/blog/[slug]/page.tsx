@@ -2,7 +2,7 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import { getBlogPostContentBySlug, getAllBlogPosts, MDXParser } from '@/lib/mdx';
 import { MDXRenderer } from '@/lib/MDXRenderer';
-import BlogLayout from '@/app/components/blog/BlogLayout';
+import { MdxContentLayout } from '@/app/components/common';
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -28,10 +28,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const mdxContent = MDXParser.reconstructMDX(post);
 
   return (
-    <BlogLayout posts={allPosts} currentSlug={slug}>
+    <MdxContentLayout records={allPosts} currentSlug={slug}>
       <div className="p-8">
         <MDXRenderer mdxContent={mdxContent} markdownContent={post} />
       </div>
-    </BlogLayout>
+    </MdxContentLayout>
   );
 }

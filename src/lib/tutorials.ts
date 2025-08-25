@@ -1,8 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-
-export const TUTORIALS_DIRECTORY = path.join(process.cwd(), 'content/tutorials');
+import { TUTORIALS_DIRECTORY } from '@/lib/constants';
 
 export interface TutorialAuthor {
   name: string;

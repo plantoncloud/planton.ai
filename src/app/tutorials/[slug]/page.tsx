@@ -1,8 +1,8 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { getTutorialContentBySlug, getAllTutorials, getTutorialsByCategory, getAllCategories } from '@/lib/tutorials';
-import { MDXParser } from '@/lib/mdx';
-import TutorialDetailClient from '@/app/components/tutorials/TutorialDetailClient';
+import { getTutorialContentBySlug, getAllTutorials, MDXParser } from '@/lib/mdx';
+import { MDXRenderer } from '@/lib/MDXRenderer';
+import { MdxContentLayout } from '@/app/components/common';
 
 interface TutorialPageProps {
   params: Promise<{ slug: string }>;
@@ -24,25 +24,14 @@ export default async function TutorialPage({ params }: TutorialPageProps) {
   }
 
   const allTutorials = getAllTutorials();
-  const currentTutorial = allTutorials.find(t => t.slug === slug);
-  
-  if (!currentTutorial) {
-    notFound();
-  }
 
-  const relatedTutorials = getTutorialsByCategory(currentTutorial.category)
-    .filter(t => t.slug !== slug)
-    .slice(0, 3);
-
-  const categories = getAllCategories();
   const mdxContent = MDXParser.reconstructMDX(tutorialContent);
 
   return (
-    <TutorialDetailClient
-      tutorial={currentTutorial}
-      relatedTutorials={relatedTutorials}
-      categories={categories}
-      mdxContent={mdxContent}
-    />
+    <MdxContentLayout records={allTutorials} currentSlug={slug} sectionTitle="Tutorials">
+      <div className="p-8">
+        <MDXRenderer mdxContent={mdxContent} markdownContent={tutorialContent} />
+      </div>
+    </MdxContentLayout>
   );
 }

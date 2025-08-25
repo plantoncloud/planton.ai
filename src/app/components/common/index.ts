@@ -7,6 +7,9 @@ export * from './plantora-grid';
 export * from './flip-effect';
 export * from './slider';
 export * from './images';
+export * from './content-layout';
+export * from './content-sidebar';
+export * from './content-details-sidebar';
 
 export const randomBetween = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1)) + min;

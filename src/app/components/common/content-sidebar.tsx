@@ -2,18 +2,36 @@
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { BlogPost } from '@/lib/mdx';
+import { Author } from '@/lib/mdx';
 
-interface BlogSidebarProps {
-  posts: BlogPost[];
+// Custom type with only the properties actually used by the component
+interface PostRecord {
+  slug: string;
+  title: string;
+  date: string;
+  author: Author[];
+  content: string;
+}
+
+interface MdxRecordListProps {
+  records: PostRecord[];
   currentSlug?: string;
   onSortChange: (sortOption: SortOption) => void;
   currentSort: SortOption;
+  sectionTitle?: string;
+  basePath?: string;
 }
 
-type SortOption = 'date-desc' | 'date-asc' | 'title-asc' | 'title-desc';
+export type SortOption = 'date-desc' | 'date-asc' | 'title-asc' | 'title-desc';
 
-const BlogSidebar: React.FC<BlogSidebarProps> = ({ posts, currentSlug, onSortChange, currentSort }) => {
+const MdxRecordList: React.FC<MdxRecordListProps> = ({ 
+  records, 
+  currentSlug, 
+  onSortChange, 
+  currentSort, 
+  sectionTitle = "Content",
+  basePath = "/blog"
+}) => {
   const [showSortMenu, setShowSortMenu] = useState(false);
   const sortMenuRef = useRef<HTMLDivElement>(null);
   const sortButtonRef = useRef<HTMLButtonElement>(null);
@@ -38,8 +56,8 @@ const BlogSidebar: React.FC<BlogSidebarProps> = ({ posts, currentSlug, onSortCha
     };
   }, [showSortMenu]);
 
-  const sortedPosts = useMemo(() => {
-    const sorted = [...posts];
+  const sortedRecords = useMemo(() => {
+    const sorted = [...records];
     
     switch (currentSort) {
       case 'date-desc':
@@ -53,12 +71,12 @@ const BlogSidebar: React.FC<BlogSidebarProps> = ({ posts, currentSlug, onSortCha
       default:
         return sorted;
     }
-  }, [posts, currentSort]);
+  }, [records, currentSort]);
 
   const getTimeAgo = (date: string) => {
     const now = new Date();
-    const postDate = new Date(date);
-    const diffTime = Math.abs(now.getTime() - postDate.getTime());
+    const recordDate = new Date(date);
+    const diffTime = Math.abs(now.getTime() - recordDate.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
     if (diffDays === 1) return '1 day ago';
@@ -80,11 +98,11 @@ const BlogSidebar: React.FC<BlogSidebarProps> = ({ posts, currentSlug, onSortCha
 
   return (
     <div className="w-80 bg-black/95 border-r border-gray-800 h-full flex flex-col">
-      {/* Blog Section Header with Sort Controls - Fixed */}
+      {/* Content Section Header with Sort Controls - Fixed */}
       <div className="p-4 border-b border-gray-800 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-white font-medium">Blogs</span>
+            <span className="text-white font-medium">{sectionTitle}</span>
           </div>
           
           {/* Sort Controls */}
@@ -122,28 +140,28 @@ const BlogSidebar: React.FC<BlogSidebarProps> = ({ posts, currentSlug, onSortCha
         </div>
       </div>
 
-      {/* Blog Posts List - Scrollable */}
+      {/* Content Records List - Scrollable */}
       <div className="flex-1 overflow-y-auto p-4">
-        {sortedPosts.map((post) => (
+        {sortedRecords.map((record) => (
           <Link
-            key={post.slug}
-            href={`/blog/${post.slug}`}
+            key={record.slug}
+            href={`${basePath}/${record.slug}`}
             className={`block py-3 px-2 rounded-md transition-colors ${
-              currentSlug === post.slug
+              currentSlug === record.slug
                 ? 'bg-blue-600 border border-blue-500/30'
                 : 'hover:bg-gray-700'
             }`}
           >
             <div className="flex items-start justify-between">
               <h3 className={`text-sm font-medium leading-tight ${
-                currentSlug === post.slug ? 'text-white' : 'text-gray-200'
+                currentSlug === record.slug ? 'text-white' : 'text-gray-200'
               }`}>
-                {post.title}
+                {record.title}
               </h3>
               <span className={`text-xs ml-2 flex-shrink-0 ${
-                currentSlug === post.slug ? 'text-blue-100' : 'text-gray-400'
+                currentSlug === record.slug ? 'text-blue-100' : 'text-gray-400'
               }`}>
-                {getTimeAgo(post.date)}
+                {getTimeAgo(record.date)}
               </span>
             </div>
           </Link>
@@ -153,4 +171,4 @@ const BlogSidebar: React.FC<BlogSidebarProps> = ({ posts, currentSlug, onSortCha
   );
 };
 
-export default BlogSidebar; 
+export { MdxRecordList };
