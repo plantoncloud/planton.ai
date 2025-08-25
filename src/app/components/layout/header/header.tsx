@@ -125,6 +125,11 @@ export const menuExplorer: IMenuItems[] = [
   },
   {
     label: '',
+    subLabel: 'Tutorials',
+    href: '/tutorials',
+  },
+  {
+    label: '',
     subLabel: 'Blog',
     href: '/blog',
   },
