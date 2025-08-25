@@ -69,8 +69,14 @@ export default async function DocsPage({ params }: { params: DocsParams }) {
     const { data } = matter(content);
     const mdxContent = MDXParser.reconstructMDX(content);
     return (
-      <DocsLayout author={data?.author as unknown as Author[]}>
-        <MDXRenderer mdxContent={mdxContent} />
+      <DocsLayout 
+        author={data?.author as unknown as Author[]}
+      >
+        <MDXRenderer 
+          mdxContent={mdxContent}
+          markdownContent={content}
+          title={data?.title}
+        />
       </DocsLayout>
     );
   } catch (error) {
