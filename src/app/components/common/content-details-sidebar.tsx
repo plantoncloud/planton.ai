@@ -1,12 +1,21 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { BlogPost } from '@/lib/mdx';
 import AuthorSection from '@/app/components/blog/AuthorSection';
 import TableOfContents from '@/app/components/blog/TableOfContents';
+import { Author } from '@/lib/mdx';
 
-interface RightSidebarProps {
-  posts: BlogPost[];
+// Custom type with only the properties actually used by the component
+interface PostRecord {
+  slug: string;
+  title: string;
+  date: string;
+  author: Author[];
+  content: string;
+}
+
+interface IMdxRightBar {
+  records: PostRecord[];
   currentSlug?: string;
 }
 
@@ -16,26 +25,26 @@ interface HeadingItem {
   level: number;
 }
 
-const RightSidebar: React.FC<RightSidebarProps> = ({ posts, currentSlug }) => {
+const MdxRightBar: React.FC<IMdxRightBar> = ({ records, currentSlug }) => {
   const [headings, setHeadings] = useState<HeadingItem[]>([]);
-  const [currentPost, setCurrentPost] = useState<BlogPost | null>(null);
+  const [currentRecord, setCurrentRecord] = useState<PostRecord | null>(null);
 
   // Get current post data
   useEffect(() => {
     if (currentSlug) {
-      const post = posts.find(p => p.slug === currentSlug);
-      setCurrentPost(post || null);
+      const record = records.find((p) => p.slug === currentSlug);
+      setCurrentRecord(record || null);
     }
-  }, [currentSlug, posts]);
+  }, [currentSlug, records]);
 
   // Extract headings from the current post content
   useEffect(() => {
-    if (currentPost?.content) {
+    if (currentRecord?.content) {
       const headingRegex = /^(#{1,6})\s+(.+)$/gm;
       const extractedHeadings: HeadingItem[] = [];
       let match;
 
-      while ((match = headingRegex.exec(currentPost.content)) !== null) {
+      while ((match = headingRegex.exec(currentRecord.content)) !== null) {
         const level = match[1].length;
         const text = match[2].trim();
         const id = text
@@ -48,22 +57,16 @@ const RightSidebar: React.FC<RightSidebarProps> = ({ posts, currentSlug }) => {
 
       setHeadings(extractedHeadings);
     }
-  }, [currentPost]);
+  }, [currentRecord]);
 
-  if (!currentPost) {
-    return (
-      <div className="w-80 bg-black/95 h-full flex flex-col">
-        <div className="p-4 flex-shrink-0">
-          <p className="text-gray-400">Select a blog post to view details</p>
-        </div>
-      </div>
-    );
+  if (!currentRecord) {
+    return <></>;
   }
 
   return (
     <div className="w-80 bg-black/95  h-full flex flex-col">
       {/* Author Section */}
-      <AuthorSection author={currentPost.author} />
+      <AuthorSection author={currentRecord?.author} />
       <div className="border-b border-gray-800" />
       {/* Table of Contents */}
       <TableOfContents headings={headings} />
@@ -71,4 +74,4 @@ const RightSidebar: React.FC<RightSidebarProps> = ({ posts, currentSlug }) => {
   );
 };
 
-export default RightSidebar; 
+export { MdxRightBar };
