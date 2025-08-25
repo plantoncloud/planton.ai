@@ -1,0 +1,114 @@
+# Rule: Docs Media and Screenshots
+
+Purpose: Ensure all images and screenshots in documentation use the Cloudflare R2 public URL for consistent media management and optimal performance.
+
+Usage: Invoke explicitly as `@docs-media` when adding images, screenshots, or other media assets to documentation or blog posts.
+
+Scope: Applies to all image references in:
+- Documentation pages (`content/docs/**`)
+- Blog posts (`content/blog/**`)
+- Any Markdown/MDX content that includes images
+
+## MANDATORY: Use Cloudflare R2 URLs
+
+**ALL images and screenshots MUST use the Cloudflare R2 base URL:**
+
+```
+https://pub-524d21c5655e4da5b4cbb0b0e80a6a7e.r2.dev/images/
+```
+
+## Image URL Format
+
+When adding images to documentation:
+
+```markdown
+![Alt text](https://pub-524d21c5655e4da5b4cbb0b0e80a6a7e.r2.dev/images/feature-name/screenshot-name.png)
+```
+
+## Examples
+
+### ✅ CORRECT - Using Cloudflare R2 URL:
+```markdown
+![Kubernetes Dashboard](https://pub-524d21c5655e4da5b4cbb0b0e80a6a7e.r2.dev/images/kubernetes-dashboard/Dashboard-tag.png)
+
+![AWS Credentials](https://pub-524d21c5655e4da5b4cbb0b0e80a6a7e.r2.dev/images/infra-hub/aws-credentials_123456789012_dev.png)
+
+![Deployment Components](https://pub-524d21c5655e4da5b4cbb0b0e80a6a7e.r2.dev/images/deployment-component-store_aws.png)
+```
+
+### ❌ INCORRECT - Using other URLs:
+```markdown
+![Dashboard](https://img.swarup.dev/planton-cloud-screenshots/dashboard.png)  # Wrong domain
+![Local Image](/images/dashboard.png)  # Local path
+![GitHub Image](https://github.com/plantoncloud/planton.ai/raw/main/images/dashboard.png)  # GitHub URL
+```
+
+## Image Organization
+
+Follow these path conventions within the R2 bucket:
+
+- **Feature-specific**: `/images/feature-name/specific-screenshot.png`
+  - Example: `/images/kubernetes-dashboard/pod-exec-icon.png`
+  - Example: `/images/infra-hub/stack-jobs-overview.png`
+
+- **Provider-specific**: `/images/provider-name/resource-type_identifier.png`
+  - Example: `/images/aws/credentials_123456789012_dev.png`
+  - Example: `/images/gcp/project_my-project-id.png`
+
+- **General concepts**: `/images/concept-name.png`
+  - Example: `/images/deployment-component-store_aws.png`
+  - Example: `/images/platform-architecture.png`
+
+## Workflow for New Images
+
+1. **Local authoring**: Place images in `content/media/images/` following the same directory structure
+2. **Sync to R2**: Run `make sync-media` to upload to Cloudflare
+3. **Reference in docs**: Use the full Cloudflare R2 URL
+
+## Image Guidelines
+
+### Naming Conventions
+- Use lowercase letters only
+- Separate words with hyphens (`-`)
+- Include context in the filename
+- Use descriptive suffixes when helpful
+
+### Good Examples:
+- `kubernetes-dashboard-overview.png`
+- `aws-credentials_123456789012_dev.png`
+- `stack-job-running-state.png`
+- `deployment-component-store_aws.png`
+
+### Bad Examples:
+- `Screenshot_2024_01_15.png` (not descriptive)
+- `IMG_1234.png` (generic name)
+- `MyDashboard.png` (mixed case)
+- `dashboard pic.png` (spaces)
+
+## Important Notes
+
+1. **Never use relative paths** - Always use the full Cloudflare R2 URL
+2. **Check availability** - Ensure the image exists at the URL before committing
+3. **Consistent base URL** - Always use the exact base URL provided above
+4. **No protocol-relative URLs** - Use `https://` explicitly
+
+## Future Migration
+
+When the custom domain is configured (replacing the dev R2 URL), this rule will be updated. All image URLs should be centralized through this base URL to make future migrations easier.
+
+## Validation Checklist
+
+Before committing documentation with images:
+- [ ] All images use the Cloudflare R2 base URL
+- [ ] Images have been synced to R2 (`make sync-media`)
+- [ ] Image URLs are accessible (test in browser)
+- [ ] Filenames follow naming conventions
+- [ ] Alt text is descriptive and meaningful
+
+## Related Rules
+- `@docs-style` - General documentation style guidelines
+- `@docs-sources` - Source code referencing requirements
+
+---
+
+Remember: Consistent media management improves performance, reduces repository size, and provides better user experience through CDN delivery.

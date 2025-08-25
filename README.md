@@ -107,11 +107,13 @@ We use Cursor as a native part of our workflow for writing docs and blog posts. 
 .cursor/rules/docs/
   00-docs-style.mdc     # Style and tone guide for docs/blogs
   01-docs-sources.mdc   # Source-of-truth and referencing guide
+  03-docs-media.mdc     # Media and screenshot URL requirements
 ```
 
 How to use (in Cursor Chat):
 - `@docs-style`: Apply the docs/blog style and tone (voice, IA, frontmatter templates)
 - `@docs-sources`: Ground content in source code across repos (Project Planton legoblocks, Planton Cloud APIs and services, CLI-first flows)
+- `@docs-media`: Ensure all images use Cloudflare R2 URLs (https://pub-524d21c5655e4da5b4cbb0b0e80a6a7e.r2.dev/images/)
 
 Why we do this: we want our documentation to be accurate, humble, and useful. That means grounding every page in real code (protobufs, IaC, backend/CLI), and writing in a reader-first tone. The rules above encode that process so contributors can open PRs with confidence.
 
